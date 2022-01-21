@@ -40,9 +40,7 @@ startServer = () => {
 
   app.get("/api/v1/cats", getCatsRoute);
 
-  app.get("*", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "../client/build", "index.html"));
-  });
+  app.use(express.static('../client/build'))
 
   app.listen(process.env.port || 3000, () => {
     console.log(`Listening at http://localhost:${port}`);
