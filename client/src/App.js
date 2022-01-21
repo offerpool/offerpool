@@ -371,7 +371,7 @@ function App() {
             </div>
           </div>
         </Modal>
-      <footer className="text-center">
+      <footer className="text-center min-vh-100">
         <a href="https://twitter.com/offerpoolio">twitter</a> <a href="https://github.com/offerpool/offerpool">github</a><br />
         © 2022 - {new Date().getFullYear()}
       </footer>
