@@ -22,6 +22,7 @@ DATABASE_UPDATE_DUPE_LIMIT=<Basically how far to go back in the database after d
 CHIA_SSL_DIR=<full path to your chia wallet RPC ssl cert directory (e.g. /.../config/ssl/wallet)>
 WALLET_RPC_HOST=<host and port of chia wallet rpc, e.g. https://localhost:9257>
 MASTER_MULTIADDR=<optional, ipfs address of a known host node to help get synced>
+IPFS_HOST=<IPFS daemon host url>
 ```
 
 API (openapi spec to follow)

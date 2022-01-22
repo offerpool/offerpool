@@ -1,22 +1,15 @@
-const IPFS = require("ipfs");
+const { create } = require('ipfs-http-client')
 const orbitdb = require("orbit-db");
 const { getTableName } = require("./get-table-name");
 const { updatePostgresTable } = require("./update-postgres-table");
 
 const getOfferDB = async () => {
-  const node = await IPFS.create({
-    repo: `./orbitdb/${getTableName()}`,
-    start: true,
-    EXPERIMENTAL: {
-      pubsub: true,
-    },
-    relay: { enabled: true, hop: { enabled: true, active: true } },
-  });
+  const ipfs = await create(process.env.IPFS_HOST);
   if (process.env.MASTER_MULTIADDR) {
     console.log("Connecting to Master Node: ", process.env.MASTER_MULTIADDR);
-    await node.swarm.connect(process.env.MASTER_MULTIADDR);
+    await ipfs.swarm.connect(process.env.MASTER_MULTIADDR);
   }
-  const orbitClient = await orbitdb.createInstance(node, {
+  const orbitClient = await orbitdb.createInstance(ipfs, {
     directory: `./orbitdb/${getTableName()}`,
   });
   dbAddress = await orbitClient.determineAddress(getTableName(), "eventlog", {
@@ -24,6 +17,7 @@ const getOfferDB = async () => {
       write: ["*"],
     },
   });
+  console.log(dbAddress);
   let database = await orbitClient.log(dbAddress);
   await database.load();
 

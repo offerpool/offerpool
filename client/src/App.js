@@ -156,12 +156,9 @@ function App() {
     const readPromises = [];
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      console.log(file);
       readPromises.push(readFile(file));
     }
     const readResults = await Promise.all(readPromises);
-    console.log(readResults);
-    // if the file doesn't start with offer it's an error
     const results = [];
     for (let i = 0; i < readResults.length; i++) {
       const offer = readResults[i];
@@ -304,10 +301,10 @@ function App() {
           <div>
             <header className="align-items-center pb-3 mb-2 border-bottom text-dark text-decoration-none container">
               <div className="row">
-                <div className="col-lg-11">
+                <div className="col-11">
                   <h2>About offerpool.io</h2>
                 </div>
-                <div className="col-lg-1 my-auto">
+                <div className="col-1 my-auto">
                   <button className="btn btn-link" onClick={toggleAbout}>
                     <FontAwesomeIcon icon="times"></FontAwesomeIcon>
                   </button>
@@ -342,10 +339,10 @@ function App() {
           <div>
             <header className="align-items-center pb-3 mb-2 border-bottom text-dark text-decoration-none container">
               <div className="row">
-                <div className="col-lg-11">
+                <div className="col-11">
                   <h2>Upload Results</h2>
                 </div>
-                <div className="col-lg-1 my-auto">
+                <div className="col-1 my-auto">
                   <button
                     className="btn btn-link"
                     onClick={() => {
