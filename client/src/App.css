@@ -1,12 +1,8 @@
-#root {
-  background: #F5F5F5;
-}
-
 .mymodal {
   position: fixed;
   top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  left: 10%;
+  transform: translate(-5%, -50%);
 
   border: 1px solid #ccc;
   background: #fff;

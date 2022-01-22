@@ -213,10 +213,10 @@ function App() {
       <div className="col-lg-8 mx-auto p-3 py-md-5">
         <header className="align-items-center pb-3 mb-2 border-bottom text-dark text-decoration-none container">
           <div className="row">
-            <div className="col-lg-11">
+            <div className="col-10">
               <h2>offerpool.io</h2>
             </div>
-            <div className="col-lg-1 my-auto">
+            <div className="col-2 my-auto">
               <button className="btn btn-link" onClick={toggleAbout}>
                 About
               </button>
@@ -371,7 +371,7 @@ function App() {
             </div>
           </div>
         </Modal>
-      <footer className="text-center min-vh-100">
+      <footer className="text-center">
         <a href="https://twitter.com/offerpoolio">twitter</a> <a href="https://github.com/offerpool/offerpool">github</a><br />
         © 2022 - {new Date().getFullYear()}
       </footer>
