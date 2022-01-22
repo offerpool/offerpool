@@ -15,7 +15,7 @@ const { getCatsRoute } = require("./routes/v1/cats/get");
 
 if (process.env.MAX_EVENT_LISTENERS) {
   require("events").EventEmitter.defaultMaxListeners =
-    process.env.MAX_EVENT_LISTENERS;
+    parseInt(process.env.MAX_EVENT_LISTENERS);
 }
 
 let db = undefined;
