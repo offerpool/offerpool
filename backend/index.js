@@ -14,8 +14,9 @@ const { updateValidOffers } = require("./utils/update-valid-offers");
 const { getCatsRoute } = require("./routes/v1/cats/get");
 
 if (process.env.MAX_EVENT_LISTENERS) {
-  require("events").EventEmitter.defaultMaxListeners =
-    parseInt(process.env.MAX_EVENT_LISTENERS);
+  require("events").EventEmitter.defaultMaxListeners = parseInt(
+    process.env.MAX_EVENT_LISTENERS
+  );
 }
 
 let db = undefined;
@@ -23,7 +24,11 @@ let db = undefined;
 const start = async () => {
   await buildPostgresTable();
   db = await getOfferDB();
-  await updatePostgresTable(db, true);
+  console.log("Updating the postgres offer database from the orbitdb database");
+  updatePostgresTable(db, true).then(() => {
+    console.log("done updating the postgres offer database");
+    setInterval(updateValidOffers, OFFER_CHECK_INTERVAL * 1000);
+  });
   startServer();
 };
 
@@ -40,7 +45,7 @@ startServer = () => {
 
   app.get("/api/v1/cats", getCatsRoute);
 
-  app.use(express.static('../client/build'))
+  app.use(express.static("../client/build"));
 
   app.listen(process.env.port || 3000, () => {
     console.log(`Listening at http://localhost:${port}`);
@@ -48,5 +53,3 @@ startServer = () => {
 };
 
 start();
-
-setInterval(updateValidOffers, OFFER_CHECK_INTERVAL * 1000);

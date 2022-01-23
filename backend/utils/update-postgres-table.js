@@ -3,7 +3,7 @@ const { doesOfferExistInPG } = require("./does-offer-exist-in-pg");
 
 let updateInProgress = false;
 let requestsForAdditionalUpdates = 0;
-const ENTRIES_PER_ITER = 25;
+const ENTRIES_PER_ITER = 100;
 
 const updatePostgresTable = async (db, starting) => {
   if (updateInProgress) {
