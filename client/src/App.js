@@ -423,7 +423,7 @@ const printOffer = (offer, catData) => {
                   .map((r) => `${r.amount}${r.code}`)
                   .join("")}x${requested
                   .map((r) => `${r.amount}${r.code}`)
-                  .join("")}.txt`}
+                  .join("")}.offer`}
                 className="link-secondary"
               >
                 <FontAwesomeIcon icon="file-download" />
@@ -498,7 +498,7 @@ const printInverseOffer = (offer, catData) => {
                   .map((r) => `${r.amount}${r.code}`)
                   .join("")}x${requested
                   .map((r) => `${r.amount}${r.code}`)
-                  .join("")}.txt`}
+                  .join("")}.offer`}
                 className="link-secondary"
               >
                 <FontAwesomeIcon icon="file-download" />
