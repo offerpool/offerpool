@@ -14,13 +14,13 @@ const updatePostgresTable = async (db, starting) => {
 
   let dupesHit = 0;
   let offersWereFound = true;
-  let last_seen_hash = undefined;
+  let lastSeenHash = undefined;
   while (
     dupesHit <= process.env.DATABASE_UPDATE_DUPE_LIMIT &&
     offersWereFound
   ) {
     let results = db
-      .iterator({ limit: ENTRIES_PER_ITER, reverse: true, lt: last_seen_hash })
+      .iterator({ limit: ENTRIES_PER_ITER, reverse: true, lt: lastSeenHash })
       .collect();
     const offerArray = results.map((entry) => {
       return entry.payload.value.offer_blob;
@@ -32,7 +32,7 @@ const updatePostgresTable = async (db, starting) => {
         await addOfferEntryToPGDB(offerArray[i]);
       }
     }
-    last_seenn_hash = results?.pop()?.hash;
+    lastSeenHash = results?.pop()?.hash;
     if (results.length == 0) {
       offersWereFound = false;
     }
