@@ -6,24 +6,16 @@ Requires Node 16.
 
 This is alpha software built over a long weekend, built on top of alpha software (orbitdb) built on top of alpha software (ipfs), but so far, it's working.
 
-Hypothetically, anyone can run an instance and offers should sync across all instances via orbitdb. I've been able to get it working but am only going to pay for one ipfs node to host it right now, so it's possible that it won't get picked up by other ipfs nodes. Reach out on twitter if you are more familiar with ipfs and orbitdb and something is wrong with the code.
+Anyone can run an instance and offers should sync across all instances via orbitdb.
 
 Stores the offers in a postgres database to make querying easier.
 
-Environment variables for backend:
-```env
-PGUSER=<postgres user>
-PGHOST=<postgres host>
-PGPASSWORD=<postgress password>
-PGDATABASE=<postgres databasae name>
-PGSCHEMA=<postgres schema name>
-PGPORT=<postgres port>
-DATABASE_UPDATE_DUPE_LIMIT=<Basically how far to go back in the database after doing a full sync, I'm using 1000 right now>
-CHIA_SSL_DIR=<full path to your chia wallet RPC ssl cert directory (e.g. /.../config/ssl/wallet)>
-WALLET_RPC_HOST=<host and port of chia wallet rpc, e.g. https://localhost:9257>
-MASTER_MULTIADDR=<optional, ipfs address of a known host node to help get synced>
-IPFS_HOST=<IPFS daemon host url>
-```
+### Running locally
+1. Make sure you are using node version 16+ and are running a beta version of the chia wallet that supports offers
+2. In `./client` run `npm install && npm run build` to build the front end
+3. In `./backend` run `docker compose -p offerpool up -d` to start the database and ipfs daemon
+4. In `./backend` copy `env.example` to `.env` and change the `CHIA_SSL_DIR` variable to be the full path of your wallet rpc ssl certs directory
+5. In `./backend` run `npm start` and go to `http://localhost:3000`
 
 API (openapi spec to follow)
 Don't abuse the API on offerpool.io. If you need the api, run your own instance and it will sync up with the offers on offerpool.io via orbitdb.

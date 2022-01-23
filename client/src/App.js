@@ -2,7 +2,7 @@ import "./App.css";
 import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import Select from "react-select";
-import Modal from "react-modal";
+import { Modal } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import fontawesome from "@fortawesome/fontawesome";
 import {
@@ -14,7 +14,6 @@ import {
 import { useDropzone } from "react-dropzone";
 
 fontawesome.library.add(faTimes, faSpinner, faExchangeAlt, faFileDownload);
-Modal.setAppElement("#root");
 
 function App() {
   // Get the cats available
@@ -197,7 +196,10 @@ function App() {
   } else {
     const cats = [];
     for (let id in catData) {
-      cats.push({ value: id, label: catData[id].cat_code });
+      cats.push({
+        value: id,
+        label: `${catData[id].cat_name} (${catData[id].cat_code})`,
+      });
     }
     const fromValue = cats.find((c) => {
       return c.value === fromCat.id;
@@ -207,7 +209,7 @@ function App() {
     });
 
     return (
-      <div className="col-lg-8 mx-auto p-3 py-md-5">
+      <div className="col-lg-9 mx-auto p-3 py-md-5">
         <header className="align-items-center pb-3 mb-2 border-bottom text-dark text-decoration-none container">
           <div className="row">
             <div className="col-10">
@@ -240,13 +242,14 @@ function App() {
             <span className="h4">Find offers from one coin to another</span>
           </div>
           <div className="row">
-            <div className="col-lg-2">
+            <div className="col-lg-3">
               <Select
                 options={cats}
                 value={fromValue}
                 getOptionValue={(option) => option.value}
                 getOptionLabel={(option) => option.label}
                 onChange={onchangeSelectFrom}
+                isSearchable={true}
               />
             </div>
             <div className="col-lg-1 my-auto text-center">
@@ -255,13 +258,14 @@ function App() {
               </button>
             </div>
 
-            <div className="col-lg-2">
+            <div className="col-lg-3">
               <Select
                 options={cats}
                 value={toValue}
                 getOptionValue={(option) => option.value}
                 getOptionLabel={(option) => option.label}
                 onChange={onchangeSelectTo}
+                isSearchable={true}
               />
             </div>
           </div>
@@ -271,46 +275,36 @@ function App() {
             <FontAwesomeIcon icon="spinner" className="fa-spin" />
           </div>
         ) : (
-          <>
-            <div className="container pt-1">
-              <div className="h3">Offers:</div>
-              <div>
-                {offers?.map((offer) => {
-                  return printOffer(offer, catData);
-                })}
+          <div className="container">
+            <div className="row">
+              <div className="pt-1 col-lg-6">
+                <span className="h4">Offers</span>
+                <div>
+                  {offers?.map((offer) => {
+                    return printOffer(offer, catData);
+                  })}
+                </div>
+              </div>
+              <div className="pt-1 col-lg-6">
+                <span className="h4">Inverse Offers</span>
+                <div>
+                  {inverseOffers?.map((offer) => {
+                    return printInverseOffer(offer, catData);
+                  })}
+                </div>
               </div>
             </div>
-            <div className="container pt-1">
-              <div className="h3">Inverse Offers:</div>
-              <div>
-                {inverseOffers?.map((offer) => {
-                  return printInverseOffer(offer, catData);
-                })}
-              </div>
-            </div>
-          </>
+          </div>
         )}
         <Modal
-          isOpen={isAboutOpen}
-          onRequestClose={toggleAbout}
-          contentLabel="About"
-          className="mymodal"
-          overlayClassName="myoverlay"
-          closeTimeoutMS={100}
+          show={isAboutOpen}
+          onHide={toggleAbout}
+          dialogClassName="modal-lg"
         >
-          <div>
-            <header className="align-items-center pb-3 mb-2 border-bottom text-dark text-decoration-none container">
-              <div className="row">
-                <div className="col-11">
-                  <h2>About offerpool.io</h2>
-                </div>
-                <div className="col-1 my-auto">
-                  <button className="btn btn-link" onClick={toggleAbout}>
-                    <FontAwesomeIcon icon="times"></FontAwesomeIcon>
-                  </button>
-                </div>
-              </div>
-            </header>
+          <Modal.Header closeButton>
+            <Modal.Title>About offerpool.io </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
             <p>
               offerpool is a open source decentralized database of chia network
               offers, built on top of orbitdb and ipfs.
@@ -324,36 +318,20 @@ function App() {
               API for interacting with the offerpool. API documentation is
               available on github.
             </p>
-          </div>
+          </Modal.Body>
         </Modal>
         <Modal
-          isOpen={isUploadResultOpen}
-          onRequestClose={() => {
+          show={isUploadResultOpen}
+          onHide={() => {
             setIsUploadResultOpen(false);
           }}
-          contentLabel="Upload Results"
-          className="mymodal"
-          overlayClassName="myoverlay"
-          closeTimeoutMS={100}
+          dialogClassName="modal-lg"
         >
-          <div>
-            <header className="align-items-center pb-3 mb-2 border-bottom text-dark text-decoration-none container">
-              <div className="row">
-                <div className="col-11">
-                  <h2>Upload Results</h2>
-                </div>
-                <div className="col-1 my-auto">
-                  <button
-                    className="btn btn-link"
-                    onClick={() => {
-                      setIsUploadResultOpen(false);
-                    }}
-                  >
-                    <FontAwesomeIcon icon="times"></FontAwesomeIcon>
-                  </button>
-                </div>
-              </div>
-            </header>
+          <Modal.Header closeButton>
+            <Modal.Title>Upload Results</Modal.Title>
+          </Modal.Header>
+
+          <Modal.Body>
             <div>
               {uploadResults?.files?.map((f, i) => {
                 return (
@@ -366,12 +344,13 @@ function App() {
                 );
               })}
             </div>
-          </div>
+          </Modal.Body>
         </Modal>
-      <footer className="text-center">
-        <a href="https://twitter.com/offerpoolio">twitter</a> <a href="https://github.com/offerpool/offerpool">github</a><br />
-        © 2022 - {new Date().getFullYear()}
-      </footer>
+        <footer className="text-center">
+          <a href="https://twitter.com/offerpoolio">twitter</a>{" "}
+          <a href="https://github.com/offerpool/offerpool">github</a>
+          <br />© 2022 - {new Date().getFullYear()}
+        </footer>
       </div>
     );
   }
@@ -402,7 +381,7 @@ const printOffer = (offer, catData) => {
   return (
     <div className="card mb-1" style={{ maxWidth: "450px" }} key={offer.offer}>
       <div className="row no-gutters">
-        <div className="col-md-6">
+        <div className="col-6">
           <div className="card-body pb-0">
             <h6>Offering</h6>
             <ul className="list-unstyled">
@@ -416,7 +395,7 @@ const printOffer = (offer, catData) => {
             </ul>
           </div>
         </div>
-        <div className="col-md-6">
+        <div className="col-6">
           <div className="card-body pb-0">
             <h6>Requesting</h6>
             <ul className="list-unstyled">
@@ -432,10 +411,10 @@ const printOffer = (offer, catData) => {
         </div>
       </div>
       <div className="row no-gutters">
-        <div className="col-md-8">
+        <div className="col-8">
           <div className="card-body pt-0">Price: {offer.price}</div>
         </div>
-        <div className="col-md-4">
+        <div className="col-4">
           <div className="card-body pt-0">
             <h4>
               <a
@@ -477,7 +456,7 @@ const printInverseOffer = (offer, catData) => {
   return (
     <div className="card mb-1" style={{ maxWidth: "450px" }} key={offer.offer}>
       <div className="row no-gutters">
-        <div className="col-md-6">
+        <div className="col-6">
           <div className="card-body pb-0">
             <h6>Requesting</h6>
             <ul className="list-unstyled">
@@ -491,7 +470,7 @@ const printInverseOffer = (offer, catData) => {
             </ul>
           </div>
         </div>
-        <div className="col-md-6">
+        <div className="col-6">
           <div className="card-body pb-0">
             <h6>Offering</h6>
             <ul className="list-unstyled">
@@ -507,10 +486,10 @@ const printInverseOffer = (offer, catData) => {
         </div>
       </div>
       <div className="row no-gutters">
-        <div className="col-md-8">
+        <div className="col-8">
           <div className="card-body pt-0">Price: {offer.price}</div>
         </div>
-        <div className="col-md-4">
+        <div className="col-4">
           <div className="card-body pt-0">
             <h4>
               <a
