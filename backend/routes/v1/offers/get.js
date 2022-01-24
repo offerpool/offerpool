@@ -3,7 +3,7 @@ const { getTableName } = require("../../../utils/get-table-name");
 const { pool } = require("../../../utils/query-db");
 
 const getOffersRoute = async (req, res) => {
-  const pageSize = Math.max(req.query["page_size"] || 100, 100);
+  const pageSize = Math.min(req.query["page_size"] || 100, 100);
   const page = req.query["page"] || 1;
   const offered = req.query["offered"] || undefined;
   const requested = req.query["requested"] || undefined;
