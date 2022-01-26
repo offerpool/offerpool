@@ -40,7 +40,7 @@ const getOffersRoute = async (req, res) => {
     ($3::smallint IS NULL OR status = $3::smallint) AND
     ($4::text IS NULL OR $4::text = ANY (offered_cats)) AND 
     ($5::text IS NULL OR $5::text = ANY (requested_cats))
-    ORDER BY id
+    ORDER BY id DESC
     LIMIT $2 OFFSET ($1 - 1) * $2
     `,
     [
