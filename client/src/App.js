@@ -1,19 +1,22 @@
 import "./App.css";
 import { useState, useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Select from "react-select";
 import { Modal } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import fontawesome from "@fortawesome/fontawesome";
 import {
-  faTimes,
   faSpinner,
   faExchangeAlt,
   faFileDownload,
 } from "@fortawesome/free-solid-svg-icons";
+import { useLoadOffers } from "./hooks/useLoadOffers";
+import useInfiniteScroll from "react-infinite-scroll-hook";
 import { useDropzone } from "react-dropzone";
+import { useLoadInverseOffers } from "./hooks/useLoadInverseOffers";
 
-fontawesome.library.add(faTimes, faSpinner, faExchangeAlt, faFileDownload);
+fontawesome.library.add(faSpinner, faExchangeAlt, faFileDownload);
 
 function App() {
   // Get the cats available
@@ -23,22 +26,91 @@ function App() {
   const [catData, setCatData] = useState();
   const [fromCat, setFromCat] = useState();
   const [toCat, setToCat] = useState();
-  const [offers, setOffers] = useState();
-  const [inverseOffers, setInverseOffers] = useState();
   const [isAboutOpen, setIsAboutOpen] = useState(false);
   const [isUploadResultOpen, setIsUploadResultOpen] = useState(false);
   const [uploadResults, setUploadResults] = useState();
+  const navigate = useNavigate();
+
+  const {
+    loadingOffers,
+    offers,
+    hasNextOffersPage,
+    errorLoadingOffers,
+    loadMoreOffers,
+    clearOfferState,
+  } = useLoadOffers(fromCat, toCat);
+  const {
+    loadingInverseOffers,
+    inverseOffers,
+    hasNextInverseOffersPage,
+    errorLoadingInverseOffers,
+    loadMoreInverseOffers,
+    clearInverseOfferState,
+  } = useLoadInverseOffers(fromCat, toCat);
+
+  const [infiniteRefOffers] = useInfiniteScroll({
+    loading: loadingOffers,
+    hasNextPage: hasNextOffersPage,
+    onLoadMore: loadMoreOffers,
+    // When there is an error, we stop infinite loading.
+    // It can be reactivated by setting "error" state as undefined.
+    disabled: !!errorLoadingOffers,
+    // `rootMargin` is passed to `IntersectionObserver`.
+    // We can use it to trigger 'onLoadMore' when the sentry comes near to become
+    // visible, instead of becoming fully visible on the screen.
+    rootMargin: "0px 0px 400px 0px",
+  });
+
+  const [infiniteRefInverseOffers] = useInfiniteScroll({
+    loading: loadingInverseOffers,
+    hasNextPage: hasNextInverseOffersPage,
+    onLoadMore: loadMoreInverseOffers,
+    // When there is an error, we stop infinite loading.
+    // It can be reactivated by setting "error" state as undefined.
+    disabled: !!errorLoadingInverseOffers,
+    // `rootMargin` is passed to `IntersectionObserver`.
+    // We can use it to trigger 'onLoadMore' when the sentry comes near to become
+    // visible, instead of becoming fully visible on the screen.
+    rootMargin: "0px 0px 400px 0px",
+  });
 
   useEffect(() => {
     if (!catData && !loading) {
       setLoading(true);
       axios.get("/api/v1/cats").then((res) => {
-        setToCat(res.data["xch"]);
-        setFromCat(
+        // Read from the params to see if there is a value, otherwise assume it's an id, otherwise default in USDS / XCH
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const from = urlParams.get("from");
+        const to = urlParams.get("to");
+        // turn the cats into an array
+        const catsArray = [];
+        for (let id in res.data) {
+          catsArray.push(res.data[id]);
+        }
+
+        let fromCat =
           res.data[
             "6d95dae356e32a71db5ddcb42224754a02524c615c5fc35f568c2af04774e589"
-          ]
-        );
+          ];
+        let toCat = res.data["xch"];
+        if (to || from) {
+          fromCat = { id: "any" };
+          toCat = { id: "any" };
+        }
+        if (to && catsArray.find((cat) => cat.cat_code === to.toUpperCase())) {
+          toCat = catsArray.find((cat) => cat.cat_code === to.toUpperCase());
+        }
+        if (
+          from &&
+          catsArray.find((cat) => cat.cat_code === from.toUpperCase())
+        ) {
+          fromCat = catsArray.find(
+            (cat) => cat.cat_code === from.toUpperCase()
+          );
+        }
+        setToCat(toCat);
+        setFromCat(fromCat);
         setCatData(res.data);
         setCatsLoaded(true);
       });
@@ -46,84 +118,29 @@ function App() {
   }, [loading, catData]);
 
   useEffect(() => {
-    if (!fromCat || !toCat) {
-      return;
-    }
-    if (offers || inverseOffers) {
-      return;
-    }
-    const loadOffers = async () => {
-      const offers = [];
-      const inverseOffers = [];
-      let moreOffers = true;
-      let moreInverseOffers = true;
-      let page = 1;
-      while (moreOffers) {
-        const result = await axios.get(
-          `/api/v1/offers?offered=${fromCat.id}&requested=${toCat.id}&page=${page}`
-        );
-        for (let i = 0; i < result.data.offers.length; i++) {
-          const offer = result.data.offers[i];
-          offer.price =
-            offer.summary.offered[fromCat.id] /
-            fromCat.mojos_per_coin /
-            (offer.summary.requested[toCat.id] / toCat.mojos_per_coin);
-
-          offers.push(result.data.offers[i]);
-        }
-        if (result.data.count < page * result.data.page_size) {
-          moreOffers = false;
-        } else {
-          page = page + 1;
-        }
-      }
-      page = 1;
-      while (moreInverseOffers) {
-        const result = await axios.get(
-          `/api/v1/offers?requested=${fromCat.id}&offered=${toCat.id}&page=${page}`
-        );
-        for (let i = 0; i < result.data.offers.length; i++) {
-          const inverseOffer = result.data.offers[i];
-          inverseOffer.price =
-            inverseOffer.summary.requested[fromCat.id] /
-            fromCat.mojos_per_coin /
-            (inverseOffer.summary.offered[toCat.id] / toCat.mojos_per_coin);
-          inverseOffers.push(inverseOffer);
-        }
-        if (result.data.count < page * result.data.page_size) {
-          moreInverseOffers = false;
-        } else {
-          page++;
-        }
-      }
-      // sort the offers by price relative to the other item
-      offers.sort((a, b) => {
-        return b.price - a.price;
-      });
-
-      inverseOffers.sort((a, b) => {
-        return a.price - b.price;
-      });
-      setOffers(offers);
-      setInverseOffers(inverseOffers);
-    };
-    loadOffers();
-  }, [fromCat, toCat, offers, inverseOffers]);
-
-  useEffect(() => {
     setOffersLoaded(offers && inverseOffers);
   }, [offers, inverseOffers]);
 
   const onchangeSelectFrom = (item) => {
-    setOffers(undefined);
-    setInverseOffers(undefined);
-    setFromCat(catData[item.value]);
+    let newFromCat = { id: "any" };
+    if (item.value !== "any") {
+      newFromCat = catData[item.value];
+    }
+    setFromCat(newFromCat);
+    clearOfferState();
+    clearInverseOfferState();
+    setCatsInHistory(newFromCat, toCat);
   };
 
   const onchangeSelectTo = (item) => {
-    setOffers(undefined);
-    setInverseOffers(undefined);
-    setToCat(catData[item.value]);
+    let newToCat = { id: "any" };
+    if (item.value !== "any") {
+      newToCat = catData[item.value];
+    }
+    setToCat(newToCat);
+    clearOfferState();
+    clearInverseOfferState();
+    setCatsInHistory(fromCat, newToCat);
   };
 
   const onInvertCats = () => {
@@ -131,8 +148,29 @@ function App() {
     const tempFromCat = toCat;
     setToCat(tempToCat);
     setFromCat(tempFromCat);
-    setOffers(undefined);
-    setInverseOffers(undefined);
+    clearOfferState();
+    clearInverseOfferState();
+    setCatsInHistory(tempFromCat, tempToCat);
+  };
+
+  const setCatsInHistory = (fromCat, toCat) => {
+    // If they are both any, save that
+    const fromCatString = (fromCat.cat_code ?? fromCat.id ?? "").toLowerCase();
+    const toCatString = (toCat.cat_code ?? toCat.id ?? "").toLowerCase();
+    if (fromCat.id === "any" && toCat.id === "any") {
+      navigate(`/?from=${fromCatString}&to=${toCatString}`, { replace: true });
+    }
+    else if (fromCat.id === "any") {
+    // If one is any, don't include it
+      navigate(`/?to=${toCatString}`, { replace: true });
+    }
+    else if (toCat.id === "any") {
+      navigate(`/?from=${fromCatString}`, { replace: true });
+    }
+    else {
+    // Include both if neither are any
+      navigate(`/?from=${fromCatString}&to=${toCatString}`, { replace: true });
+    }
   };
 
   function toggleAbout() {
@@ -201,6 +239,10 @@ function App() {
         label: `${catData[id].cat_name} (${catData[id].cat_code})`,
       });
     }
+    cats.push({
+      value: "any",
+      label: "Any",
+    });
     const fromValue = cats.find((c) => {
       return c.value === fromCat.id;
     });
@@ -284,14 +326,25 @@ function App() {
                     return printOffer(offer, catData);
                   })}
                 </div>
+                {loadingOffers && <p>Loading...</p>}
+                {errorLoadingOffers && <p>Error!</p>}
+                <div ref={infiniteRefOffers} />
               </div>
+              {/** Hide inverse offers if both are any */}
               <div className="pt-1 col-lg-6">
-                <span className="h4">Inverse Offers</span>
+                <span className="h4">
+                  {fromCat.id === "any" && toCat.id === "any"
+                    ? ""
+                    : "Inverse Offers"}
+                </span>
                 <div>
                   {inverseOffers?.map((offer) => {
                     return printInverseOffer(offer, catData);
                   })}
                 </div>
+                {loadingInverseOffers && <p>Loading...</p>}
+                {errorLoadingInverseOffers && <p>Error!</p>}
+                <div ref={infiniteRefInverseOffers} />
               </div>
             </div>
           </div>
@@ -412,7 +465,11 @@ const printOffer = (offer, catData) => {
       </div>
       <div className="row no-gutters">
         <div className="col-8">
-          <div className="card-body pt-0">Price: {offer.price}</div>
+          {offer.price ? (
+            <div className="card-body pt-0">Price: {offer.price}</div>
+          ) : (
+            <div className="card-body pt-0"> </div>
+          )}
         </div>
         <div className="col-4">
           <div className="card-body pt-0">
@@ -487,7 +544,11 @@ const printInverseOffer = (offer, catData) => {
       </div>
       <div className="row no-gutters">
         <div className="col-8">
-          <div className="card-body pt-0">Price: {offer.price}</div>
+          {offer.price ? (
+            <div className="card-body pt-0">Price: {offer.price}</div>
+          ) : (
+            <div className="card-body pt-0"> </div>
+          )}
         </div>
         <div className="col-4">
           <div className="card-body pt-0">
