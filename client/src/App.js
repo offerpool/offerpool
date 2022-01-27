@@ -363,12 +363,10 @@ function App() {
               offers, built on top of orbitdb and ipfs.
             </p>
             <p>
-              The goal of offerpool is to prevent any centralized player from
-              controlling or monopolizing offer distribution.
+              The goal of offerpool is to create a shared global collection of offers that anyone can access. 
             </p>
             <p>
-              offerpool.io uses the offerpool backend with a barebones UI and
-              API for interacting with the offerpool. API documentation is
+              offerpool.io uses the offerpool backend with a basic web UI. API documentation is
               available on github.
             </p>
           </Modal.Body>
