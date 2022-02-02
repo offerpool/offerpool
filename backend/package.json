@@ -10,7 +10,9 @@
     "ipfs-http-client": "^55.0.0",
     "node-fetch": "^2.6.1",
     "orbit-db": "^0.28.0",
-    "pg": "^8.7.1"
+    "pg": "^8.7.1",
+    "pino": "^7.6.5",
+    "pino-http": "^6.6.0"
   },
   "devDependencies": {
     "create-react-app": "^5.0.0",

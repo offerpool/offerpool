@@ -1,11 +1,11 @@
-version: '3'
+version: "3"
 services:
   database:
     image: "postgres"
     environment:
-      POSTGRES_USER: 'postgres'
-      POSTGRES_PASSWORD: 'mysecretpassword'
-      POSTGRES_DB: 'postgres'
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "mysecretpassword"
+      POSTGRES_DB: "postgres"
     volumes:
       - database-data:/var/lib/postgresql/data/ # persist data even if container shuts down
     ports:
@@ -19,8 +19,14 @@ services:
       - "4001:4001"
       - "4001:4001/udp"
       - "5001:5001"
-    command: ["daemon", "--migrate=true", "--agent-version-suffix=docker", "--enable-pubsub-experiment"]
+    command:
+      [
+        "daemon",
+        "--migrate=true",
+        "--agent-version-suffix=docker",
+        "--enable-pubsub-experiment",
+      ]
 volumes:
   database-data:
   ipfs_staging:
-  ipfs_data: 
+  ipfs_data:
