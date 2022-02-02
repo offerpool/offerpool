@@ -244,8 +244,8 @@ function App() {
     });
     // sort the cats into alphabetical order with any on the top
     cats.sort((a, b) => {
-      if(a.value === "any") {
-        return -1
+      if (a.value === "any") {
+        return -1;
       } else {
         return a.label.localeCompare(b.label);
       }
@@ -482,11 +482,11 @@ const printOffer = (offer, catData) => {
         <div className="col-4">
           <div className="card-body pt-0">
             <h4>
-              <CopyToClipboard
-                text={offer.offer}
-                onCopy={() => this.setState({ copied: true })}
-              >
-                <button className="copy-button btn-link-secondary" title="copy offer to clipboard">
+              <CopyToClipboard text={offer.offer}>
+                <button
+                  className="copy-button btn-link-secondary"
+                  title="copy offer to clipboard"
+                >
                   <FontAwesomeIcon icon="copy" />
                 </button>
               </CopyToClipboard>
@@ -570,11 +570,11 @@ const printInverseOffer = (offer, catData) => {
         <div className="col-4">
           <div className="card-body pt-0">
             <h4>
-              <CopyToClipboard
-                text={offer.offer}
-                onCopy={() => this.setState({ copied: true })}
-              >
-                <button className="copy-button btn-link-secondary" title="copy offer to clipboard">
+              <CopyToClipboard text={offer.offer}>
+                <button
+                  className="copy-button btn-link-secondary"
+                  title="copy offer to clipboard"
+                >
                   <FontAwesomeIcon icon="copy" />
                 </button>
               </CopyToClipboard>
