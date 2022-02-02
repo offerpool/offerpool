@@ -4,11 +4,9 @@ A decentralized database of chia offers with a barebones UI and API.
 
 Requires Node 16.
 
-This is alpha software built over a long weekend, built on top of alpha software (orbitdb) built on top of alpha software (ipfs), but so far, it's working.
+Anyone can run an instance of offerpool and offers will sync across all instances within seconds via ipfs pub sub.
 
-Anyone can run an instance and offers should sync across all instances via orbitdb.
-
-Stores the offers in a postgres database to make querying easier.
+In addition to the orbitdb offer table, offers are stored locally in a postgres table with the details of the offer as well as the offer's current status which is maintained by a background job.
 
 ### Running locally
 1. Make sure you are using node version 16+ and are running a beta version of the chia wallet that supports offers

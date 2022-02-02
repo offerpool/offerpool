@@ -1,6 +1,7 @@
 const { getOfferSummary, getOfferValidity } = require("./get-offer-summary");
 const { getTableName } = require("./get-table-name");
 const { pool } = require("./query-db");
+const logger = require("pino")();
 
 /** Adds an offer to the postgres table, returns false if the offer could not be added */
 const addOfferEntryToPGDB = async (offer) => {
@@ -13,12 +14,10 @@ const addOfferEntryToPGDB = async (offer) => {
     for (let cat in offerSummary.summary.offered) {
       offered_cats.push(cat);
     }
-
     const requested_cats = [];
     for (let cat in offerSummary.summary.requested) {
       requested_cats.push(cat);
     }
-
     const offerStatus = await getOfferValidity(offer);
     if (!offerStatus || !offerStatus.success) {
       return true;
@@ -39,8 +38,9 @@ const addOfferEntryToPGDB = async (offer) => {
         JSON.stringify(offerSummary.summary),
       ]
     );
+    logger.info({ offer }, "added offer successfully");
   } catch (err) {
-    console.error(`Error adding offer: `, { offer, err });
+    logger.error({ offer, err }, "error adding offer");
     return false;
   }
   return true;

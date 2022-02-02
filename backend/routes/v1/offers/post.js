@@ -32,7 +32,6 @@ const postOffersRoute = (db) => async (req, res) => {
   } catch {
     res.json({ success: false, error_message: "unknown error" });
   }
-
 };
 
 module.exports.postOffersRoute = postOffersRoute;

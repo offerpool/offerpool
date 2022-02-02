@@ -10,13 +10,15 @@ import {
   faSpinner,
   faExchangeAlt,
   faFileDownload,
+  faCopy,
 } from "@fortawesome/free-solid-svg-icons";
 import { useLoadOffers } from "./hooks/useLoadOffers";
 import useInfiniteScroll from "react-infinite-scroll-hook";
 import { useDropzone } from "react-dropzone";
 import { useLoadInverseOffers } from "./hooks/useLoadInverseOffers";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 
-fontawesome.library.add(faSpinner, faExchangeAlt, faFileDownload);
+fontawesome.library.add(faSpinner, faExchangeAlt, faFileDownload, faCopy);
 
 function App() {
   // Get the cats available
@@ -159,16 +161,13 @@ function App() {
     const toCatString = (toCat.cat_code ?? toCat.id ?? "").toLowerCase();
     if (fromCat.id === "any" && toCat.id === "any") {
       navigate(`/?from=${fromCatString}&to=${toCatString}`, { replace: true });
-    }
-    else if (fromCat.id === "any") {
-    // If one is any, don't include it
+    } else if (fromCat.id === "any") {
+      // If one is any, don't include it
       navigate(`/?to=${toCatString}`, { replace: true });
-    }
-    else if (toCat.id === "any") {
+    } else if (toCat.id === "any") {
       navigate(`/?from=${fromCatString}`, { replace: true });
-    }
-    else {
-    // Include both if neither are any
+    } else {
+      // Include both if neither are any
       navigate(`/?from=${fromCatString}&to=${toCatString}`, { replace: true });
     }
   };
@@ -243,6 +242,14 @@ function App() {
       value: "any",
       label: "Any",
     });
+    // sort the cats into alphabetical order with any on the top
+    cats.sort((a, b) => {
+      if(a.value === "any") {
+        return -1
+      } else {
+        return a.label.localeCompare(b.label);
+      }
+    });
     const fromValue = cats.find((c) => {
       return c.value === fromCat.id;
     });
@@ -259,7 +266,7 @@ function App() {
             </div>
             <div className="col-2 my-auto">
               <button className="btn btn-link" onClick={toggleAbout}>
-                About
+                about offerpool
               </button>
             </div>
           </div>
@@ -359,15 +366,18 @@ function App() {
           </Modal.Header>
           <Modal.Body>
             <p>
-              offerpool is a open source decentralized database of chia network
-              offers, built on top of orbitdb and ipfs.
+              offerpool is a{" "}
+              <a href="https://github.com/offerpool/offerpool">open-source</a>{" "}
+              decentralized database of chia network offers, built on top of
+              orbitdb and ipfs.
             </p>
             <p>
-              The goal of offerpool is to create a shared global collection of offers that anyone can access. 
+              The goal of offerpool is to create a shared global collection of
+              offers that anyone can access.
             </p>
             <p>
-              offerpool.io uses the offerpool backend with a basic web UI. API documentation is
-              available on github.
+              offerpool.io uses the offerpool backend with a basic web UI. API
+              documentation is available on github.
             </p>
           </Modal.Body>
         </Modal>
@@ -472,6 +482,14 @@ const printOffer = (offer, catData) => {
         <div className="col-4">
           <div className="card-body pt-0">
             <h4>
+              <CopyToClipboard
+                text={offer.offer}
+                onCopy={() => this.setState({ copied: true })}
+              >
+                <button className="copy-button btn-link-secondary" title="copy offer to clipboard">
+                  <FontAwesomeIcon icon="copy" />
+                </button>
+              </CopyToClipboard>
               <a
                 href={`data:text/plain,${offer.offer}`}
                 download={`${offered
@@ -480,6 +498,7 @@ const printOffer = (offer, catData) => {
                   .map((r) => `${r.amount}${r.code}`)
                   .join("")}.offer`}
                 className="link-secondary"
+                title="download offer file"
               >
                 <FontAwesomeIcon icon="file-download" />
               </a>
@@ -551,6 +570,14 @@ const printInverseOffer = (offer, catData) => {
         <div className="col-4">
           <div className="card-body pt-0">
             <h4>
+              <CopyToClipboard
+                text={offer.offer}
+                onCopy={() => this.setState({ copied: true })}
+              >
+                <button className="copy-button btn-link-secondary" title="copy offer to clipboard">
+                  <FontAwesomeIcon icon="copy" />
+                </button>
+              </CopyToClipboard>
               <a
                 href={`data:text/plain,${offer.offer}`}
                 download={`${offered
@@ -559,6 +586,7 @@ const printInverseOffer = (offer, catData) => {
                   .map((r) => `${r.amount}${r.code}`)
                   .join("")}.offer`}
                 className="link-secondary"
+                title="download offer file"
               >
                 <FontAwesomeIcon icon="file-download" />
               </a>

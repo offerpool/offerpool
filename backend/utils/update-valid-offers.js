@@ -2,6 +2,7 @@ const { getOfferValidity } = require("./get-offer-summary");
 const { pool } = require("./query-db");
 const crypto = require("crypto");
 const { getTableName } = require("./get-table-name");
+const logger = require("pino")();
 
 let updating = false;
 let requestToUpdate = 0;
@@ -13,13 +14,14 @@ const updateValidOffers = async () => {
   }
   updating = true;
   const start = new Date();
-  console.log("updating offers");
+  logger.info("Starting Offer Update");
   // TODO: page through offers to limit memory usage
   const offers = await pool.query(
     `SELECT id, offer FROM "${getTableName()}"
         WHERE 
         (status = 1)`
   );
+  logger.info(`Offer Update Found ${offers.rows.length} Offers`);
   // Do 10 offers at once
   const batch_size = 10;
   const batches = offers.rows.length / batch_size;
@@ -38,7 +40,7 @@ const updateValidOffers = async () => {
     await Promise.all(offerPromises);
   }
 
-  console.log(
+  logger.info(
     `Updating statuses for ${offers.rows.length} offers took ${
       (new Date().getTime() - start.getTime()) / 1000
     } seconds.`
@@ -56,11 +58,8 @@ const updateOffer = async (offer, id) => {
     return;
   }
   if (!offerStatus.valid) {
-    const offerHash = crypto.createHash("sha256").update(offer).digest();
-    console.log(`Updating status of offer ${id}`);
-    pool.query(`UPDATE "${getTableName()}" SET status = 0 WHERE hash = $1`, [
-      offerHash,
-    ]);
+    logger.info(`Updating status of offer ${id}`);
+    pool.query(`UPDATE "${getTableName()}" SET status = 0 WHERE id = $1`, [id]);
   }
 };
 
