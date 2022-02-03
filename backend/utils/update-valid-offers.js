@@ -2,12 +2,17 @@ const { getOfferValidity } = require("./get-offer-summary");
 const { pool } = require("./query-db");
 const crypto = require("crypto");
 const { getTableName } = require("./get-table-name");
+const { boolParse } = require("./bool-parse");
 const logger = require("pino")();
 
 let updating = false;
 let requestToUpdate = 0;
 
 const updateValidOffers = async () => {
+  if(boolParse(process.env.SKIP_UPDATE_STATUS_JOB, false)) {
+    logger.info("Skipping Offer Update Job");
+    return;
+  }
   if (updating) {
     requestToUpdate++;
     return;
