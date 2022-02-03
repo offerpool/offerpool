@@ -14,6 +14,8 @@ const { postOffersRoute } = require("./routes/v1/offers/post");
 const { updateValidOffers } = require("./utils/update-valid-offers");
 const { getCatsRoute } = require("./routes/v1/cats/get");
 const { customLogLevel } = require("./utils/http-request-log-level");
+const { liveRoute } = require("./routes/diagnostics/live");
+const { readyRoute } = require("./routes/diagnostics/ready");
 
 if (process.env.MAX_EVENT_LISTENERS) {
   require("events").EventEmitter.defaultMaxListeners = parseInt(
@@ -47,6 +49,10 @@ startServer = () => {
   app.post("/api/v1/offers", postOffersRoute(db));
 
   app.get("/api/v1/cats", getCatsRoute);
+
+  app.get("/diagnostics/live", liveRoute);
+
+  app.get("/diagnostics/ready", readyRoute);
 
   app.use(express.static("../client/build"));
 
