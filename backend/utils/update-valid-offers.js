@@ -9,7 +9,7 @@ let updating = false;
 let requestToUpdate = 0;
 
 const updateValidOffers = async () => {
-  if(boolParse(process.env.SKIP_UPDATE_STATUS_JOB, false)) {
+  if (boolParse(process.env.SKIP_UPDATE_STATUS_JOB, false)) {
     logger.info("Skipping Offer Update Job");
     return;
   }

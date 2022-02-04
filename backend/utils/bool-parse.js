@@ -1,5 +1,4 @@
 const boolParse = (value, defaultValue) => {
-
   if (value === undefined || value === null) {
     return defaultValue;
   }
