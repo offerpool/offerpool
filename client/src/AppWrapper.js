@@ -17,7 +17,7 @@ function AppWrapper() {
     const DEFAULT_FALLBACK = () => defaultLocale;
     const results = multipleDetect(
       fromUrl("lang"),
-      fromSubdomain(),
+      fromSubdomain(0),
       fromNavigator(),
       DEFAULT_FALLBACK
     );
