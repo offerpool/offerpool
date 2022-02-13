@@ -1,18 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./index.css";
-import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+import AppWrapper from "./AppWrapper";
 
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <Routes>
-        {/* TODO: Make the route inside App if we want other pages */}
-        <Route path="/" element={<App />} />
-      </Routes>
-    </BrowserRouter>
+    <AppWrapper />
   </React.StrictMode>,
   document.getElementById("root")
 );
