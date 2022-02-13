@@ -8,6 +8,8 @@
     "@fortawesome/free-regular-svg-icons": "^5.15.4",
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
     "@fortawesome/react-fontawesome": "^0.1.16",
+    "@lingui/detect-locale": "^3.13.2",
+    "@lingui/react": "^3.13.2",
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
@@ -27,7 +29,9 @@
     "start": "PORT=3001 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "extract": "lingui extract",
+    "compile": "lingui compile"
   },
   "proxy": "http://localhost:3000",
   "eslintConfig": {
@@ -47,5 +51,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@lingui/cli": "^3.13.2",
+    "@lingui/macro": "^3.13.2"
   }
 }
