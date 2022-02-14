@@ -1,13 +1,14 @@
 import { i18n } from "@lingui/core";
-import { en, fr } from "make-plural/plurals";
+import { en, fr, de } from "make-plural/plurals";
 
-export const availableLocales = ["en", "fr"]
+export const availableLocales = ["en", "fr", "de"]
 
 export const defaultLocale = "en";
 
 i18n.loadLocaleData({
   en: { plurals: en },
   fr: { plurals: fr },
+  de: { plurals: de },
 });
 
 /**

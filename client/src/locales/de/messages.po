@@ -1,0 +1,121 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2022-02-14 08:32-0600\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: de\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/App.js:52
+msgid "<0>offerpool is a <1>open-source</1> decentralized database of chia network offers, built on top of orbitdb and ipfs.</0><2>The goal of offerpool is to create a shared global collection of offers that anyone can access.</2><3>offerpool.io uses the offerpool backend with a basic web UI. API documentation is available on github.</3>"
+msgstr "<0>offerpool ist eine <1>Open-Source</1> und dezentralisierte Datenbank für sogenannte Chia Network Offer Files, basierend auf of orbitdb und ipfs.</0><2>Das Ziel von offerpool Das Ziel von offerpool ist es, eine gemeinsame globale Sammlung von Offer Files zu erstellen, auf die jeder zugreifen kann.</2><3>http://offerpool.io verwendet das offerpool-Backend mit einer einfachen Web-UI. Die API-Dokumentation ist auf Github verfügbar.</3>"
+
+#: src/App.js:48
+msgid "About offerpool.io"
+msgstr "über offerpool"
+
+#: src/OfferList.js:266
+msgid "Add Offers to the Pool"
+msgstr "Offer File zum Pool hinzufügen"
+
+#: src/OfferList.js:243
+msgid "Any"
+msgstr "Beliebig"
+
+#: src/OfferList.js:272
+msgid "Drag offers here or click to select offer files"
+msgstr "Offer Files hierher ziehen oder anklicken, um Offer Files auszuwählen"
+
+#: src/OfferList.js:270
+msgid "Drop offers here..."
+msgstr "Offer Files hier einstellen"
+
+#: src/OfferList.js:211
+msgid "Error adding offer"
+msgstr "Fehler beim Hinzufügen eines Offer Files"
+
+#: src/OfferList.js:202
+msgid "Error adding offer, Invalid offer file"
+msgstr "Fehler beim Hinzufügen eines Offer Files. Ungültige Datei"
+
+#: src/OfferList.js:214
+msgid "Error adding offer, try again later"
+msgstr "Fehler beim Hinzufügen eines Offer Files, versuche es später noch einmal"
+
+#: src/OfferList.js:325
+#: src/OfferList.js:341
+msgid "Error!"
+msgstr "Fehler!"
+
+#: src/OfferList.js:279
+msgid "Find offers from one coin to another"
+msgstr "Angebote für einen Coin finden"
+
+#: src/OfferList.js:333
+msgid "Inverse Offers"
+msgstr "Inversive Offers"
+
+#: src/OfferList.js:324
+#: src/OfferList.js:340
+msgid "Loading..."
+msgstr "Laden..."
+
+#: src/OfferList.js:405
+#: src/OfferList.js:507
+msgid "Offering"
+msgstr "Anbieten"
+
+#: src/OfferList.js:318
+msgid "Offers"
+msgstr "Angebote"
+
+#: src/OfferList.js:435
+#: src/OfferList.js:523
+msgid "Price"
+msgstr "Preis"
+
+#: src/OfferList.js:419
+#: src/OfferList.js:493
+msgid "Requesting"
+msgstr "Nachfragend"
+
+#: src/OfferList.js:207
+msgid "Success"
+msgstr "Erfolg"
+
+#: src/OfferList.js:379
+msgid "Unknown"
+msgstr "Unbekannt"
+
+#: src/OfferList.js:355
+msgid "Upload Results"
+msgstr "Ergebnisse hochladen"
+
+#: src/App.js:33
+msgid "about offerpool"
+msgstr "über offerpool"
+
+#: src/OfferList.js:446
+#: src/OfferList.js:534
+msgid "copy offer to clipboard"
+msgstr "Angebot in die Zwischenablage kopieren"
+
+#: src/OfferList.js:459
+#: src/OfferList.js:547
+msgid "download offer file"
+msgstr "Offer File herunterladen"
+
+#: src/App.js:72
+msgid "github"
+msgstr "github"
+
+#: src/App.js:71
+msgid "twitter"
+msgstr "twitter"
