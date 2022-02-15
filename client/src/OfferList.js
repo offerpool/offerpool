@@ -17,6 +17,7 @@ import { useDropzone } from "react-dropzone";
 import { useLoadInverseOffers } from "./hooks/useLoadInverseOffers";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { Trans, t } from "@lingui/macro";
+import { ThemeContext } from "./contexts/ThemeContext";
 
 fontawesome.library.add(faSpinner, faExchangeAlt, faFileDownload, faCopy);
 
@@ -161,10 +162,12 @@ function OfferList() {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const language = urlParams.get("lang");
-    let langParam = language ? `&lang=${language}` : '';
-    
+    let langParam = language ? `&lang=${language}` : "";
+
     if (fromCat.id === "any" && toCat.id === "any") {
-      navigate(`/?from=${fromCatString}&to=${toCatString}${langParam}`, { replace: true });
+      navigate(`/?from=${fromCatString}&to=${toCatString}${langParam}`, {
+        replace: true,
+      });
     } else if (fromCat.id === "any") {
       // If one is any, don't include it
       navigate(`/?to=${toCatString}${langParam}`, { replace: true });
@@ -172,7 +175,9 @@ function OfferList() {
       navigate(`/?from=${fromCatString}${langParam}`, { replace: true });
     } else {
       // Include both if neither are any
-      navigate(`/?from=${fromCatString}&to=${toCatString}${langParam}`, { replace: true });
+      navigate(`/?from=${fromCatString}&to=${toCatString}${langParam}`, {
+        replace: true,
+      });
     }
   };
 
@@ -263,20 +268,30 @@ function OfferList() {
           <div className="row mb-2">
             <div className="card" role="button" {...getRootProps()}>
               <div className="card-body text-center">
-                <h5 className="card-title"><Trans>Add Offers to the Pool</Trans></h5>
+                <h5 className="card-title">
+                  <Trans>Add Offers to the Pool</Trans>
+                </h5>
                 <span className="">
                   <input {...getInputProps()} />
                   {isDragActive ? (
-                    <span><Trans>Drop offers here...</Trans></span>
+                    <span>
+                      <Trans>Drop offers here...</Trans>
+                    </span>
                   ) : (
-                    <span><Trans>Drag offers here or click to select offer files</Trans></span>
+                    <span>
+                      <Trans>
+                        Drag offers here or click to select offer files
+                      </Trans>
+                    </span>
                   )}
                 </span>
               </div>
             </div>
           </div>
           <div className="row">
-            <span className="h4"><Trans>Find offers from one coin to another</Trans></span>
+            <span className="h4">
+              <Trans>Find offers from one coin to another</Trans>
+            </span>
           </div>
           <div className="row">
             <div className="col-lg-3">
@@ -287,6 +302,7 @@ function OfferList() {
                 getOptionLabel={(option) => option.label}
                 onChange={onchangeSelectFrom}
                 isSearchable={true}
+                classNamePrefix="cat-selector"
               />
             </div>
             <div className="col-lg-1 my-auto text-center">
@@ -303,6 +319,7 @@ function OfferList() {
                 getOptionLabel={(option) => option.label}
                 onChange={onchangeSelectTo}
                 isSearchable={true}
+                classNamePrefix="cat-selector"
               />
             </div>
           </div>
@@ -315,30 +332,50 @@ function OfferList() {
           <div className="container">
             <div className="row">
               <div className="pt-1 col-lg-6">
-                <span className="h4"><Trans>Offers</Trans></span>
+                <span className="h4">
+                  <Trans>Offers</Trans>
+                </span>
                 <div>
                   {offers?.map((offer) => {
                     return printOffer(offer, catData);
                   })}
                 </div>
-                {loadingOffers && <p><Trans>Loading...</Trans></p>}
-                {errorLoadingOffers && <p><Trans>Error!</Trans></p>}
+                {loadingOffers && (
+                  <p>
+                    <Trans>Loading...</Trans>
+                  </p>
+                )}
+                {errorLoadingOffers && (
+                  <p>
+                    <Trans>Error!</Trans>
+                  </p>
+                )}
                 <div ref={infiniteRefOffers} />
               </div>
               {/** Hide inverse offers if both are any */}
               <div className="pt-1 col-lg-6">
                 <span className="h4">
-                  {fromCat.id === "any" && toCat.id === "any"
-                    ? ""
-                    : <Trans>Inverse Offers</Trans>}
+                  {fromCat.id === "any" && toCat.id === "any" ? (
+                    ""
+                  ) : (
+                    <Trans>Inverse Offers</Trans>
+                  )}
                 </span>
                 <div>
                   {inverseOffers?.map((offer) => {
                     return printInverseOffer(offer, catData);
                   })}
                 </div>
-                {loadingInverseOffers && <p><Trans>Loading...</Trans></p>}
-                {errorLoadingInverseOffers && <p><Trans>Error!</Trans></p>}
+                {loadingInverseOffers && (
+                  <p>
+                    <Trans>Loading...</Trans>
+                  </p>
+                )}
+                {errorLoadingInverseOffers && (
+                  <p>
+                    <Trans>Error!</Trans>
+                  </p>
+                )}
                 <div ref={infiniteRefInverseOffers} />
               </div>
             </div>
@@ -351,10 +388,18 @@ function OfferList() {
           }}
           dialogClassName="modal-lg"
         >
-          <Modal.Header closeButton>
-            <Modal.Title><Trans>Upload Results</Trans></Modal.Title>
-          </Modal.Header>
-
+          <ThemeContext.Consumer>
+            {({ theme }) => (
+              <Modal.Header
+                closeButton
+                closeVariant={theme === "dark-mode-content" ? "white" : ""}
+              >
+                <Modal.Title>
+                  <Trans>Upload Results</Trans>
+                </Modal.Title>
+              </Modal.Header>
+            )}
+          </ThemeContext.Consumer>
           <Modal.Body>
             <div>
               {uploadResults?.files?.map((f, i) => {
@@ -376,7 +421,9 @@ function OfferList() {
 }
 
 const getUnkownCatCode = (cat_id) => {
-  return `${t`Unknown`} ${cat_id.slice(0, 5)}...${cat_id.slice(cat_id.length - 5)}`;
+  return `${t`Unknown`} ${cat_id.slice(0, 5)}...${cat_id.slice(
+    cat_id.length - 5
+  )}`;
 };
 
 const printOffer = (offer, catData) => {
@@ -402,7 +449,9 @@ const printOffer = (offer, catData) => {
       <div className="row no-gutters">
         <div className="col-6">
           <div className="card-body pb-0">
-            <h6><Trans>Offering</Trans></h6>
+            <h6>
+              <Trans>Offering</Trans>
+            </h6>
             <ul className="list-unstyled">
               {offered.map((r) => {
                 return (
@@ -416,7 +465,9 @@ const printOffer = (offer, catData) => {
         </div>
         <div className="col-6">
           <div className="card-body pb-0">
-            <h6><Trans>Requesting</Trans></h6>
+            <h6>
+              <Trans>Requesting</Trans>
+            </h6>
             <ul className="list-unstyled">
               {requested.map((r) => {
                 return (
@@ -432,7 +483,9 @@ const printOffer = (offer, catData) => {
       <div className="row no-gutters">
         <div className="col-8">
           {offer.price ? (
-            <div className="card-body pt-0"><Trans>Price</Trans>: {offer.price}</div>
+            <div className="card-body pt-0">
+              <Trans>Price</Trans>: {offer.price}
+            </div>
           ) : (
             <div className="card-body pt-0"> </div>
           )}
@@ -490,7 +543,9 @@ const printInverseOffer = (offer, catData) => {
       <div className="row no-gutters">
         <div className="col-6">
           <div className="card-body pb-0">
-            <h6><Trans>Requesting</Trans></h6>
+            <h6>
+              <Trans>Requesting</Trans>
+            </h6>
             <ul className="list-unstyled">
               {requested.map((r) => {
                 return (
@@ -504,7 +559,9 @@ const printInverseOffer = (offer, catData) => {
         </div>
         <div className="col-6">
           <div className="card-body pb-0">
-            <h6><Trans>Offering</Trans></h6>
+            <h6>
+              <Trans>Offering</Trans>
+            </h6>
             <ul className="list-unstyled">
               {offered.map((r) => {
                 return (
@@ -520,7 +577,9 @@ const printInverseOffer = (offer, catData) => {
       <div className="row no-gutters">
         <div className="col-8">
           {offer.price ? (
-            <div className="card-body pt-0"><Trans>Price</Trans>: {offer.price}</div>
+            <div className="card-body pt-0">
+              <Trans>Price</Trans>: {offer.price}
+            </div>
           ) : (
             <div className="card-body pt-0"> </div>
           )}
@@ -555,4 +614,4 @@ const printInverseOffer = (offer, catData) => {
     </div>
   );
 };
-export default OfferList
+export default OfferList;
