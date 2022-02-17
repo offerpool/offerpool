@@ -13,109 +13,113 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/App.js:52
+#: src/App.js:95
 msgid "<0>offerpool is a <1>open-source</1> decentralized database of chia network offers, built on top of orbitdb and ipfs.</0><2>The goal of offerpool is to create a shared global collection of offers that anyone can access.</2><3>offerpool.io uses the offerpool backend with a basic web UI. API documentation is available on github.</3>"
 msgstr "<0>offerpool ist eine <1>Open-Source</1> und dezentralisierte Datenbank für sogenannte Chia Network Offer Files, basierend auf of orbitdb und ipfs.</0><2>Das Ziel von offerpool Das Ziel von offerpool ist es, eine gemeinsame globale Sammlung von Offer Files zu erstellen, auf die jeder zugreifen kann.</2><3>http://offerpool.io verwendet das offerpool-Backend mit einer einfachen Web-UI. Die API-Dokumentation ist auf Github verfügbar.</3>"
 
-#: src/App.js:48
+#: src/App.js:89
 msgid "About offerpool.io"
 msgstr "über offerpool"
 
-#: src/OfferList.js:266
+#: src/OfferList.js:274
 msgid "Add Offers to the Pool"
 msgstr "Offer File zum Pool hinzufügen"
 
-#: src/OfferList.js:243
+#: src/OfferList.js:250
 msgid "Any"
 msgstr "Beliebig"
 
-#: src/OfferList.js:272
+#: src/OfferList.js:284
 msgid "Drag offers here or click to select offer files"
 msgstr "Offer Files hierher ziehen oder anklicken, um Offer Files auszuwählen"
 
-#: src/OfferList.js:270
+#: src/OfferList.js:280
 msgid "Drop offers here..."
 msgstr "Offer Files hier einstellen"
 
-#: src/OfferList.js:211
+#: src/OfferList.js:218
 msgid "Error adding offer"
 msgstr "Fehler beim Hinzufügen eines Offer Files"
 
-#: src/OfferList.js:202
+#: src/OfferList.js:209
 msgid "Error adding offer, Invalid offer file"
 msgstr "Fehler beim Hinzufügen eines Offer Files. Ungültige Datei"
 
-#: src/OfferList.js:214
+#: src/OfferList.js:221
 msgid "Error adding offer, try again later"
 msgstr "Fehler beim Hinzufügen eines Offer Files, versuche es später noch einmal"
 
-#: src/OfferList.js:325
-#: src/OfferList.js:341
+#: src/OfferList.js:354
+#: src/OfferList.js:380
 msgid "Error!"
 msgstr "Fehler!"
 
-#: src/OfferList.js:279
+#: src/OfferList.js:295
 msgid "Find offers from one coin to another"
 msgstr "Angebote für einen Coin finden"
 
-#: src/OfferList.js:333
+#: src/OfferList.js:365
 msgid "Inverse Offers"
 msgstr "Inversive Offers"
 
-#: src/OfferList.js:324
-#: src/OfferList.js:340
+#: src/OfferList.js:349
+#: src/OfferList.js:375
 msgid "Loading..."
 msgstr "Laden..."
 
-#: src/OfferList.js:405
-#: src/OfferList.js:507
+#: src/OfferList.js:459
+#: src/OfferList.js:570
 msgid "Offering"
 msgstr "Anbieten"
 
-#: src/OfferList.js:318
+#: src/OfferList.js:340
 msgid "Offers"
 msgstr "Angebote"
 
-#: src/OfferList.js:435
-#: src/OfferList.js:523
+#: src/OfferList.js:493
+#: src/OfferList.js:588
 msgid "Price"
 msgstr "Preis"
 
-#: src/OfferList.js:419
-#: src/OfferList.js:493
+#: src/OfferList.js:475
+#: src/OfferList.js:554
 msgid "Requesting"
 msgstr "Nachfragend"
 
-#: src/OfferList.js:207
+#: src/OfferList.js:214
 msgid "Success"
 msgstr "Erfolg"
 
-#: src/OfferList.js:379
+#: src/OfferList.js:430
 msgid "Unknown"
 msgstr "Unbekannt"
 
-#: src/OfferList.js:355
+#: src/OfferList.js:404
 msgid "Upload Results"
 msgstr "Ergebnisse hochladen"
 
-#: src/App.js:33
+#: src/App.js:69
 msgid "about offerpool"
 msgstr "über offerpool"
 
-#: src/OfferList.js:446
-#: src/OfferList.js:534
+#: src/OfferList.js:506
+#: src/OfferList.js:601
 msgid "copy offer to clipboard"
 msgstr "Angebot in die Zwischenablage kopieren"
 
-#: src/OfferList.js:459
-#: src/OfferList.js:547
+#: src/OfferList.js:519
+#: src/OfferList.js:614
 msgid "download offer file"
 msgstr "Offer File herunterladen"
 
-#: src/App.js:72
+#: src/App.js:118
 msgid "github"
 msgstr "github"
 
-#: src/App.js:71
+#: src/components/TakeOfferInGoby.js:27
+msgid "take offer in goby"
+msgstr ""
+
+#: src/App.js:115
 msgid "twitter"
 msgstr "twitter"

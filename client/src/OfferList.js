@@ -18,6 +18,8 @@ import { useLoadInverseOffers } from "./hooks/useLoadInverseOffers";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { Trans, t } from "@lingui/macro";
 import { ThemeContext } from "./contexts/ThemeContext";
+import { GobyContext } from "./contexts/GobyContext";
+import { TakeOfferInGoby } from "./components/TakeOfferInGoby";
 
 fontawesome.library.add(faSpinner, faExchangeAlt, faFileDownload, faCopy);
 
@@ -329,57 +331,61 @@ function OfferList() {
             <FontAwesomeIcon icon="spinner" className="fa-spin" />
           </div>
         ) : (
-          <div className="container">
-            <div className="row">
-              <div className="pt-1 col-lg-6">
-                <span className="h4">
-                  <Trans>Offers</Trans>
-                </span>
-                <div>
-                  {offers?.map((offer) => {
-                    return printOffer(offer, catData);
-                  })}
+          <GobyContext.Consumer>
+            {({ account }) => (
+              <div className="container">
+                <div className="row">
+                  <div className="pt-1 col-lg-6">
+                    <span className="h4">
+                      <Trans>Offers</Trans>
+                    </span>
+                    <div>
+                      {offers?.map((offer) => {
+                        return printOffer(offer, catData, account);
+                      })}
+                    </div>
+                    {loadingOffers && (
+                      <p>
+                        <Trans>Loading...</Trans>
+                      </p>
+                    )}
+                    {errorLoadingOffers && (
+                      <p>
+                        <Trans>Error!</Trans>
+                      </p>
+                    )}
+                    <div ref={infiniteRefOffers} />
+                  </div>
+                  {/** Hide inverse offers if both are any */}
+                  <div className="pt-1 col-lg-6">
+                    <span className="h4">
+                      {fromCat.id === "any" && toCat.id === "any" ? (
+                        ""
+                      ) : (
+                        <Trans>Inverse Offers</Trans>
+                      )}
+                    </span>
+                    <div>
+                      {inverseOffers?.map((offer) => {
+                        return printInverseOffer(offer, catData, account);
+                      })}
+                    </div>
+                    {loadingInverseOffers && (
+                      <p>
+                        <Trans>Loading...</Trans>
+                      </p>
+                    )}
+                    {errorLoadingInverseOffers && (
+                      <p>
+                        <Trans>Error!</Trans>
+                      </p>
+                    )}
+                    <div ref={infiniteRefInverseOffers} />
+                  </div>
                 </div>
-                {loadingOffers && (
-                  <p>
-                    <Trans>Loading...</Trans>
-                  </p>
-                )}
-                {errorLoadingOffers && (
-                  <p>
-                    <Trans>Error!</Trans>
-                  </p>
-                )}
-                <div ref={infiniteRefOffers} />
               </div>
-              {/** Hide inverse offers if both are any */}
-              <div className="pt-1 col-lg-6">
-                <span className="h4">
-                  {fromCat.id === "any" && toCat.id === "any" ? (
-                    ""
-                  ) : (
-                    <Trans>Inverse Offers</Trans>
-                  )}
-                </span>
-                <div>
-                  {inverseOffers?.map((offer) => {
-                    return printInverseOffer(offer, catData);
-                  })}
-                </div>
-                {loadingInverseOffers && (
-                  <p>
-                    <Trans>Loading...</Trans>
-                  </p>
-                )}
-                {errorLoadingInverseOffers && (
-                  <p>
-                    <Trans>Error!</Trans>
-                  </p>
-                )}
-                <div ref={infiniteRefInverseOffers} />
-              </div>
-            </div>
-          </div>
+            )}
+          </GobyContext.Consumer>
         )}
         <Modal
           show={isUploadResultOpen}
@@ -426,7 +432,7 @@ const getUnkownCatCode = (cat_id) => {
   )}`;
 };
 
-const printOffer = (offer, catData) => {
+const printOffer = (offer, catData, account) => {
   const offered = [];
   const requested = [];
   for (const cat in offer.summary.offered) {
@@ -481,7 +487,7 @@ const printOffer = (offer, catData) => {
         </div>
       </div>
       <div className="row no-gutters">
-        <div className="col-8">
+        <div className="col-7">
           {offer.price ? (
             <div className="card-body pt-0">
               <Trans>Price</Trans>: {offer.price}
@@ -490,9 +496,10 @@ const printOffer = (offer, catData) => {
             <div className="card-body pt-0"> </div>
           )}
         </div>
-        <div className="col-4">
+        <div className="col-5">
           <div className="card-body pt-0">
             <h4>
+              <TakeOfferInGoby account={account} offer={offer} />
               <CopyToClipboard text={offer.offer}>
                 <button
                   className="copy-button btn-link-secondary"
@@ -508,7 +515,7 @@ const printOffer = (offer, catData) => {
                   .join("")}x${requested
                   .map((r) => `${r.amount}${r.code}`)
                   .join("")}.offer`}
-                className="link-secondary"
+                className="link-secondary download-button"
                 title={t`download offer file`}
               >
                 <FontAwesomeIcon icon="file-download" />
@@ -521,7 +528,7 @@ const printOffer = (offer, catData) => {
   );
 };
 
-const printInverseOffer = (offer, catData) => {
+const printInverseOffer = (offer, catData, account) => {
   const offered = [];
   const requested = [];
   for (const cat in offer.summary.offered) {
@@ -575,7 +582,7 @@ const printInverseOffer = (offer, catData) => {
         </div>
       </div>
       <div className="row no-gutters">
-        <div className="col-8">
+        <div className="col-7">
           {offer.price ? (
             <div className="card-body pt-0">
               <Trans>Price</Trans>: {offer.price}
@@ -584,9 +591,10 @@ const printInverseOffer = (offer, catData) => {
             <div className="card-body pt-0"> </div>
           )}
         </div>
-        <div className="col-4">
+        <div className="col-5">
           <div className="card-body pt-0">
             <h4>
+              <TakeOfferInGoby account={account} offer={offer} />
               <CopyToClipboard text={offer.offer}>
                 <button
                   className="copy-button btn-link-secondary"
@@ -602,7 +610,7 @@ const printInverseOffer = (offer, catData) => {
                   .join("")}x${requested
                   .map((r) => `${r.amount}${r.code}`)
                   .join("")}.offer`}
-                className="link-secondary"
+                className="link-secondary download-button"
                 title={t`download offer file`}
               >
                 <FontAwesomeIcon icon="file-download" />
