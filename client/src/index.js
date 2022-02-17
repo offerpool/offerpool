@@ -4,13 +4,16 @@ import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 import AppWrapper from "./AppWrapper";
 import ThemeContextWrapper from "./ThemeContextWrapper";
+import GobyContextWrapper from "./GobyContextWrapper";
 
 ReactDOM.render(
-  <ThemeContextWrapper>
-    <React.StrictMode>
-      <AppWrapper />
-    </React.StrictMode>
-  </ThemeContextWrapper>,
+  <GobyContextWrapper>
+    <ThemeContextWrapper>
+      <React.StrictMode>
+        <AppWrapper />
+      </React.StrictMode>
+    </ThemeContextWrapper>
+  </GobyContextWrapper>,
   document.getElementById("root")
 );
 

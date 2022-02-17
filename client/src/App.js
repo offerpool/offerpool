@@ -10,9 +10,12 @@ import {
   faCopy,
 } from "@fortawesome/free-solid-svg-icons";
 import OfferList from "./OfferList";
+import GobyUserInfo from "./components/GobyUserInfo";
 import { Trans } from "@lingui/macro";
 import { ThemeContext, themes } from "./contexts/ThemeContext";
 import { DarkModeSwitch } from "./components/DarkModeSwitch";
+import { GobyContext } from "./contexts/GobyContext";
+import { ConnectGobyAccount } from "./components/ConnectGobyAccount";
 
 fontawesome.library.add(faSpinner, faExchangeAlt, faFileDownload, faCopy);
 
@@ -27,7 +30,19 @@ function App() {
     <div className="col-lg-9 mx-auto p-3 pb-md-5">
       <header className="align-items-center pb-3 mb-2 border-bottom text-dark text-decoration-none container">
         <div className="row justify-content-end">
-          <div className="col-3 text-end">
+          <div className="col-6 text-end">
+            <GobyContext.Consumer>
+              {({ account, isGobyInstalled, handleConnect }) => {
+                if (isGobyInstalled) {
+                  if (account) {
+                    return <GobyUserInfo account={account} />;
+                  } else {
+                    return <ConnectGobyAccount handleConnect={handleConnect} />;
+                  }
+                }
+                return <></>;
+              }}
+            </GobyContext.Consumer>
             <ThemeContext.Consumer>
               {({ changeTheme, theme }) => {
                 const isDarkMode = theme === "dark-mode-content";
@@ -46,10 +61,10 @@ function App() {
           </div>
         </div>
         <div className="row">
-          <div className="col-9">
+          <div className="col-8">
             <h2>offerpool.io</h2>
           </div>
-          <div className="col-3 my-auto text-end">
+          <div className="col-4 my-auto text-end">
             <button className="btn btn-link" onClick={toggleAbout}>
               <Trans>about offerpool</Trans>
             </button>
