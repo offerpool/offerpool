@@ -51,5 +51,16 @@ insert into "${table_name}_cats_info"(id, "name", code, mojos_per_coin) VALUES
 ;
 `;
 
+const create_nft_table = (table_name) => 
+`create table "${table_name}_nft_info"
+(
+    launcher_id varchar
+        constraint "${table_name}_nft_info_pk"
+            primary key,
+    nft_id      varchar,
+    coin_info   text
+);`
+
 module.exports.table_exists = table_exists;
 module.exports.create_table = create_table;
+module.exports.create_nft_table = create_nft_table;

@@ -45,5 +45,21 @@ const getOfferValidity = async (offer) => {
   return await summary.json();
 };
 
+const getNftCoinInfo = async (coin_id) => {
+  const f = await fetch;
+  const summary = await f.default(
+    `${process.env.WALLET_RPC_HOST}/nft_get_info`,
+    {
+      method: "post",
+      body: JSON.stringify({ coin_id }),
+      headers: { "Content-Type": "application/json" },
+      agent: sslConfiguredAgent,
+    }
+  );
+  return await summary.json();
+};
+
+
 module.exports.getOfferSummary = getOfferSummary;
 module.exports.getOfferValidity = getOfferValidity;
+module.exports.getNftCoinInfo = getNftCoinInfo;

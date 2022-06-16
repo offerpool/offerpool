@@ -34,12 +34,20 @@ const getOffersRoute = async (req, res) => {
   }
 
   const results = await pool.query(
-    `SELECT *
-    FROM "${getTableName()}"
+    `SELECT offer.*,
+    json_agg(json_build_object('nft_launcher_id', nft.launcher_id,
+                               'nft_id', nft.nft_id,
+                               'nft_info', nft.coin_info
+        )) as nft_info
+    FROM "${getTableName()}" offer
+    left outer join "${getTableName()}_nft_info" nft
+    on nft.launcher_id = ANY (offer.offered_cats) or
+       nft.launcher_id = ANY (offer.requested_cats)
     WHERE 
     ($3::smallint IS NULL OR status = $3::smallint) AND
     ($4::text IS NULL OR $4::text = ANY (offered_cats)) AND 
     ($5::text IS NULL OR $5::text = ANY (requested_cats))
+    GROUP BY offer.id
     ORDER BY id DESC
     LIMIT $2 OFFSET ($1 - 1) * $2
     `,
@@ -77,6 +85,7 @@ const mapRowToOffer = async (row) => {
       offered: await mapCatInfo(row.parsed_offer.offered),
       requested: await mapCatInfo(row.parsed_offer.requested),
     },
+    nft_info: row.nft_info
   };
 };
 

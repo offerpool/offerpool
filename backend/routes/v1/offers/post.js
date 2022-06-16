@@ -28,7 +28,8 @@ const postOffersRoute = (db) => async (req, res) => {
     }
     await db.add({ offer_blob: offer });
     res.json({ success: true });
-  } catch {
+  } catch(e) {
+    console.error(e);
     res.json({ success: false, error_message: "unknown error" });
   }
 };

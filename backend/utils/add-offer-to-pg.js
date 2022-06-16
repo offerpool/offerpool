@@ -1,7 +1,9 @@
-const { getOfferSummary, getOfferValidity } = require("./get-offer-summary");
+const { getOfferSummary, getOfferValidity, getNftCoinInfo } = require("./get-offer-summary");
 const { getTableName } = require("./get-table-name");
 const { pool } = require("./query-db");
+const { toBech32m } = require("./to-bech32");
 const logger = require("pino")();
+const { saveNFTInfos } = require("./save-nft-infos");
 
 /** Adds an offer to the postgres table, returns false if the offer could not be added */
 const addOfferEntryToPGDB = async (offer) => {
@@ -18,6 +20,25 @@ const addOfferEntryToPGDB = async (offer) => {
     for (let cat in offerSummary.summary.requested) {
       requested_cats.push(cat);
     }
+
+    // If the offer has any nft's, make sure entries for those NFTs exist in the nft_info table
+    const nfts = [];
+    const infos = offerSummary && offerSummary.summary && offerSummary.summary.infos
+    if(infos) {
+      for(let nftCoinId in infos) {
+        if(infos[nftCoinId] && infos[nftCoinId].launcher_id) {
+          const nftCoinInfo = await getNftCoinInfo(infos[nftCoinId].launcher_id);
+          nfts.push({coin_id: nftCoinId, nft_id: toBech32m(infos[nftCoinId].launcher_id, "nft"), nft_info: nftCoinInfo});
+        }
+      }
+    }
+    try {
+      await saveNFTInfos(nfts);
+    } catch (e) {
+      logger.error(e);
+      logger.info("continuing to add offer through NFT addition error")
+    }
+
     const offerStatus = await getOfferValidity(offer);
     if (!offerStatus || !offerStatus.success) {
       return true;
