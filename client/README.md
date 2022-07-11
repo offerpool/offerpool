@@ -1,3 +1,3 @@
 # offerpool.io front end
 
-It works but it's not pretty
+Run `npm install`, `npm run build` and then `npm run start`

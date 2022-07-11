@@ -55,11 +55,21 @@ const create_nft_table = (table_name) =>
 `create table "${table_name}_nft_info"
 (
     launcher_id varchar
-        constraint "${table_name}_nft_info_pk"
-            primary key,
-    nft_id      varchar,
-    coin_info   text
-);`
+        constraint "${table_name}_nft_info_pk" primary key,
+    nft_id     varchar,
+    nft_info   text,
+	success    boolean,
+    minter_did_id varchar,
+	collection_id varchar
+);
+
+create index "${table_name}_nft_info_success_index"
+  on "${table_name}_nft_info" (success);
+
+create index "${table_name}_nft_info_collection_did_index"
+  on "${table_name}_nft_info" (collection_id, minter_did_id);
+`
+
 
 module.exports.table_exists = table_exists;
 module.exports.create_table = create_table;

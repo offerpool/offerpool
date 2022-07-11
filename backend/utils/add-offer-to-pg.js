@@ -1,7 +1,6 @@
 const { getOfferSummary, getOfferValidity, getNftCoinInfo } = require("./get-offer-summary");
 const { getTableName } = require("./get-table-name");
 const { pool } = require("./query-db");
-const { toBech32m } = require("./to-bech32");
 const logger = require("pino")();
 const { saveNFTInfos } = require("./save-nft-infos");
 
@@ -28,7 +27,7 @@ const addOfferEntryToPGDB = async (offer) => {
       for(let nftCoinId in infos) {
         if(infos[nftCoinId] && infos[nftCoinId].launcher_id) {
           const nftCoinInfo = await getNftCoinInfo(infos[nftCoinId].launcher_id);
-          nfts.push({coin_id: nftCoinId, nft_id: toBech32m(infos[nftCoinId].launcher_id, "nft"), nft_info: nftCoinInfo});
+          nfts.push(getNftDTO(nftCoinId, nftCoinInfo, infos[nftCoinId].launcher_id));
         }
       }
     }
@@ -67,4 +66,17 @@ const addOfferEntryToPGDB = async (offer) => {
   return true;
 };
 
+const getNftDTO = (nftCoinId, nftCoinInfo, launcher_id) => {
+  return {
+    coin_id: nftCoinId,
+    nft_info: nftCoinInfo.nft_info,
+    success: nftCoinInfo.success,
+    minter_did_id: nftCoinInfo.minter_did_id,
+    collection_id: nftCoinInfo.collection_id,
+  };
+};
+
+
 module.exports.addOfferEntryToPGDB = addOfferEntryToPGDB;
+
+
