@@ -79,7 +79,7 @@ const getNftCoinInfo = async (coin_id) => {
     result.minter_did_id = did_data.did_id;
   } else {
     respText = did_owner_response.text();
-    logger.info({response: respText, coin_id}, "error getting did owner")
+    logger.silent({response: respText, coin_id}, "error getting did owner")
     result.success = false;
   }
   if(!result.success) {
@@ -106,7 +106,7 @@ const getNFTMetadata = async (nft_info) => {
           }
         }
       }
-      logger.info({expected_hash: nft_info?.metadata_hash, actual_hash: hash, response: responseString }, "error getting nft metadata");
+      logger.silent({expected_hash: nft_info?.metadata_hash, actual_hash: hash, response: responseString }, "error getting nft metadata");
     } catch (e) {
       logger.info({e}, "thrown error getting nft metadata");
       // Don't log any errors here
