@@ -3,6 +3,7 @@ const { mapMinNftInfo } = require("../../../../mappers/map-nft-info");
 const { getTableName } = require("../../../../../utils/get-table-name");
 const logger = require("pino")();
 const { pool } = require("../../../../../utils/query-db");
+const { base58 } = require("../../../../../utils/base-58");
 
 const getOffersForCollectionRoute = async (req, res) => {
     try {
@@ -20,9 +21,8 @@ const getOffersForCollectionRoute = async (req, res) => {
         statusSearchParam = 1;
       }
 
-      const start = performance.now()
       const results = await pool.query(
-        `SELECT offer.*,
+        `SELECT offer.hash, offer.status, offer.parsed_offer,
         json_agg(json_build_object('nft_launcher_id', nft.launcher_id,
                                    'nft_info', nft.nft_info
             )) as nft_info
@@ -41,10 +41,7 @@ const getOffersForCollectionRoute = async (req, res) => {
           did,
         ]
       );
-      const gotOffers = performance.now()
       const offers = await Promise.all(results.rows.map(mapRowToOffer));
-      const mapOffers = performance.now()
-      logger.info({map_offers: mapOffers - gotOffers, get_offers: gotOffers - start})
       res.send({
         offers: offers,
       })
@@ -56,7 +53,7 @@ const getOffersForCollectionRoute = async (req, res) => {
 
 const mapRowToOffer = async (row) => {
     return {
-      offer: row.offer,
+      id: base58.encode(row.hash),
       active: row.status ? true : false,
       summary_with_cat_info: {
         offered: await mapCatInfo(row.parsed_offer.offered),

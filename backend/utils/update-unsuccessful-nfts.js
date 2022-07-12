@@ -17,9 +17,18 @@ const updateUnsuccessfulNfts = async () => {
   const start = new Date()
   logger.info("starting nft update")
   const nftLauncherIds = await pool.query(
-    `SELECT launcher_id FROM "${getTableName()}_nft_info"
-        WHERE 
-        (success <> true)`
+    `select info_launchers.launcher_id launcher_id
+    from (Select array_to_string(regexp_matches(parsed_offer ->> 'infos', '"launcher_id": "0x([0-9a-f]+)"', 'g'), ';') as "launcher_id", id
+          from "${getTableName()}") as info_launchers
+    left outer join "${getTableName()}_nft_info" nft on info_launchers.launcher_id = nft.launcher_id
+        where info_launchers.launcher_id is not null and nft.launcher_id is null
+    
+    UNION DISTINCT
+    
+    SELECT launcher_id FROM "${getTableName()}_nft_info"
+            WHERE
+            (success <> true OR success is null)
+    `
   );
 
   logger.info(`NFT fixup found ${nftLauncherIds.rows.length} NFTs`);
@@ -38,7 +47,7 @@ const updateUnsuccessfulNfts = async () => {
       promises.push(updateNft(launcherId));
     }
     await Promise.all(promises);
-  }
+   }
 
   logger.info(
     `Updating info for ${nftLauncherIds.rows.length} nfts took ${
@@ -59,6 +68,9 @@ const updateNft = async (launcherId) => {
     try {
         const nftCoinInfo = await getNftCoinInfo(launcherId);
         nfts.push(getNftDTO(launcherId, nftCoinInfo));
+        if(nftCoinInfo.success) {
+            logger.info(`fixing up ${launcherId}`);
+        }
         await saveNFTInfos(nfts)
     } catch (error) {
         logger.error({error: error.message, nfts, nftCoinInfo}, "Error updating NFT")

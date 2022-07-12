@@ -14,7 +14,8 @@ const { liveRoute } = require("./routes/diagnostics/live");
 const { readyRoute } = require("./routes/diagnostics/ready");
 const { getOffersForCollectionRoute } = require("./routes/v1/offers/nft/collection/get");
 const compression = require("compression");
-const cors = require('cors')
+const cors = require('cors');
+const { getOfferByHash } = require("./routes/v1/offers/[id]/get");
 
 if (process.env.MAX_EVENT_LISTENERS) {
   require("events").EventEmitter.defaultMaxListeners = parseInt(
@@ -39,6 +40,7 @@ startServer = () => {
   app.use(compression());
 
   app.get("/api/v1/offers", getOffersRoute);
+  app.get("/api/v1/offers/:id", cors(), getOfferByHash);
 
   app.get("/api/v1/offers/nft/collection", cors(), getOffersForCollectionRoute);
 
