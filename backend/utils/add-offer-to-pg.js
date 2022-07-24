@@ -48,17 +48,8 @@ const addOfferEntryToPGDB = async (offer) => {
     if (offerStatus.valid) {
       status = 1;
     }
-    const result = await pool.query(
-      `INSERT into "${getTableName()}"(hash, offer, status, offered_cats, requested_cats, parsed_offer) VALUES (sha256($1), $2, $3, $4, $5, $6)`,
-      [
-        offer,
-        offer,
-        status,
-        offered_cats,
-        requested_cats,
-        JSON.stringify(offerSummary.summary),
-      ]
-    );
+    await commitToPostgres(offer, status, offered_cats, requested_cats, offerSummary);
+
     logger.info({ offer }, "added offer successfully");
   } catch (err) {
     logger.error({ offer, err }, "error adding offer");
@@ -70,3 +61,36 @@ const addOfferEntryToPGDB = async (offer) => {
 module.exports.addOfferEntryToPGDB = addOfferEntryToPGDB;
 
 
+async function commitToPostgres(offer, status, offered_cats, requested_cats, offerSummary) {
+  // TODO: Make a single transaction
+  const result = await pool.query(
+    `INSERT into "${getTableName()}"(hash, offer, status, offered_cats, requested_cats, parsed_offer) VALUES (sha256($1), $2, $3, $4, $5, $6) RETURNING id;`,
+    [
+      offer,
+      offer,
+      status,
+      offered_cats,
+      requested_cats,
+      JSON.stringify(offerSummary.summary),
+    ]
+  );
+  const offerId = result?.rows?.[0]?.id;
+  if (offerId) {
+    for (var cat of offered_cats) {
+      await pool.query(
+        `INSERT into "${getTableName()}_offered_cat"(offer_id, cat_id) VALUES ($1, $2) ON CONFLICT DO NOTHING;`,
+        [
+          offerId,
+          cat,
+        ]);
+    }
+    for (var cat of requested_cats) {
+      await pool.query(
+        `INSERT into "${getTableName()}_requested_cat"(offer_id, cat_id) VALUES ($1, $2) ON CONFLICT DO NOTHING;`,
+        [
+          offerId,
+          cat,
+        ]);
+    }
+  }
+}

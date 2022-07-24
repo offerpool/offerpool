@@ -21,20 +21,36 @@ const getOffersForCollectionRoute = async (req, res) => {
         statusSearchParam = 1;
       }
 
-      const results = await pool.query(
-        `SELECT offer.hash, offer.status, offer.parsed_offer,
+      const query = `
+      SELECT offer.hash, offer.status, offer.parsed_offer,
         json_agg(json_build_object('nft_launcher_id', nft.launcher_id,
                                    'nft_info', nft.nft_info
             )) as nft_info
         FROM "${getTableName()}" offer
-        left outer join "${getTableName()}_nft_info" nft
-        on nft.launcher_id = ANY (offer.offered_cats) or
-           nft.launcher_id = ANY (offer.requested_cats)
-        WHERE 
+        inner join "${getTableName()}_requested_cat" requested on requested.offer_id = offer.id
+        inner join "${getTableName()}_nft_info" nft
+        on nft.launcher_id = requested.cat_id
+        WHERE
         ($1::smallint IS NULL OR status = $1::smallint) AND
         nft.collection_id = $2 AND
         nft.minter_did_id = $3
-        GROUP BY offer.id`,
+    GROUP BY offer.id
+    UNION ALL
+    SELECT offer.hash, offer.status, offer.parsed_offer,
+            json_agg(json_build_object('nft_launcher_id', nft.launcher_id,
+                                      'nft_info', nft.nft_info
+                )) as nft_info
+        FROM "${getTableName()}" offer
+        inner join "${getTableName()}_offered_cat" offered on offered.offer_id = offer.id
+        inner join "${getTableName()}_nft_info" nft
+        on nft.launcher_id = offered.cat_id
+        WHERE
+        ($1::smallint IS NULL OR status = $1::smallint) AND
+        nft.collection_id = $2 AND
+        nft.minter_did_id = $3
+    GROUP BY offer.id`;
+
+      const results = await pool.query(query,
         [
           statusSearchParam,
           collectionId,

@@ -36,7 +36,7 @@ const getOffersRoute = async (req, res) => {
     } else {
       statusSearchParam = 1;
     }
-  
+    // TODO: investigate adding status to the cat id tables to make lookup faster
     const results = await pool.query(
       `SELECT offer.*,
       json_agg(json_build_object('nft_launcher_id', nft.launcher_id,
