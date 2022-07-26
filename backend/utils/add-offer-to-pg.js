@@ -9,7 +9,8 @@ const { saveNFTInfos } = require("./save-nft-infos");
 const addOfferEntryToPGDB = async (offer) => {
   try {
     const offerSummary = await getOfferSummary(offer);
-    if (!offerSummary || !offerSummary.success) {
+    // If the chia client can't parse the offer, or it's an xch for xch offer (CAT1 to CAT1/XCH), ignore it
+    if (!offerSummary || !offerSummary.success || (offerInfo.summary.requested['xch'] && offerInfo.summary.offered['xch'])) {
       return true;
     }
     const offered_cats = [];

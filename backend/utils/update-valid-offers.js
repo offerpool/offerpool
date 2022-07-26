@@ -1,4 +1,4 @@
-const { getOfferValidity } = require("./get-offer-summary");
+const { getOfferValidity, getOfferSummary } = require("./get-offer-summary");
 const { pool } = require("./query-db");
 const { getTableName } = require("./get-table-name");
 const logger = require("pino")();
@@ -22,14 +22,15 @@ const updateValidOffers = async () => {
   );
   logger.info(`Offer Update Found ${offers.rows.length} Offers`);
   // Do 10 offers at once
-  const batch_size = 10;
+  const batch_size = 50;
   const batches = offers.rows.length / batch_size;
   let currentPosition = 0;
   for (let batch = 0; batch < batches; batch++) {
+    logger.info(`Updating offer batch ${batch} of ${batches}`)
     offerPromises = [];
     for (
       let i = 0;
-      i < 10 && currentPosition < offers.rows.length;
+      i < batch_size && currentPosition < offers.rows.length;
       i++, currentPosition++
     ) {
       const offer = offers.rows[currentPosition].offer;
@@ -52,11 +53,12 @@ const updateValidOffers = async () => {
 };
 
 const updateOffer = async (offer, id) => {
+  const offerInfo = await getOfferSummary(offer);
   const offerStatus = await getOfferValidity(offer);
-  if (!offerStatus || !offerStatus.success) {
+  if (!offerStatus) {
     return;
   }
-  if (!offerStatus.valid) {
+  if (!offerStatus.valid || (offerInfo.summary.requested['xch'] && offerInfo.summary.offered['xch'])) {
     logger.info(`Updating status of offer ${id}`);
     await pool.query(`UPDATE "${getTableName()}" SET status = 0 WHERE id = $1`, [id]);
   }
