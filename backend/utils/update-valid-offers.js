@@ -1,4 +1,4 @@
-const { getOfferValidity, getOfferSummary } = require("./get-offer-summary");
+const { getOfferValidity } = require("./get-offer-summary");
 const { pool } = require("./query-db");
 const { getTableName } = require("./get-table-name");
 const logger = require("pino")();
@@ -53,12 +53,11 @@ const updateValidOffers = async () => {
 };
 
 const updateOffer = async (offer, id) => {
-  const offerInfo = await getOfferSummary(offer);
   const offerStatus = await getOfferValidity(offer);
   if (!offerStatus) {
     return;
   }
-  if (!offerStatus.valid || (offerInfo.summary.requested['xch'] && offerInfo.summary.offered['xch'])) {
+  if (!offerStatus.valid) {
     logger.info(`Updating status of offer ${id}`);
     await pool.query(`UPDATE "${getTableName()}" SET status = 0 WHERE id = $1`, [id]);
   }
