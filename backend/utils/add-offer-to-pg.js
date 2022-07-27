@@ -10,7 +10,7 @@ const addOfferEntryToPGDB = async (offer) => {
   try {
     const offerSummary = await getOfferSummary(offer);
     // If the chia client can't parse the offer, or it's an xch for xch offer (CAT1 to CAT1/XCH), ignore it
-    if (!offerSummary || !offerSummary.success || (offerInfo.summary.requested['xch'] && offerInfo.summary.offered['xch'])) {
+    if (!offerSummary || !offerSummary.success || (offerSummary.summary.requested['xch'] && offerSummary.summary.offered['xch'])) {
       return true;
     }
     const offered_cats = [];
