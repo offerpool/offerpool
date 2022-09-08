@@ -22,7 +22,7 @@ const updateValidOffers = async () => {
   );
   logger.info(`Offer Update Found ${offers.rows.length} Offers`);
   // Do 10 offers at once
-  const batch_size = 50;
+  const batch_size = 10;
   const batches = offers.rows.length / batch_size;
   let currentPosition = 0;
   for (let batch = 0; batch < batches; batch++) {
