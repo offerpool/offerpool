@@ -117,7 +117,10 @@ function App() {
         <a href="https://github.com/offerpool/offerpool">
           <Trans>github</Trans>
         </a>
-        <br />© 2022 - {new Date().getFullYear()}
+        <div style={{fontSize: '13px'}}>
+          Send Coffee <span style={{fontFamily: 'ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace'}}>xch1wp7yg237uc4yp8q5kwhqe0ahzme6w9urhjd096u5n0kr880qyzusznkzd7</span>
+          <br />© 2022 - {new Date().getFullYear()}
+        </div>
       </footer>
     </div>
   );

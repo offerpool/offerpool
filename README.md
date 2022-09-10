@@ -36,3 +36,6 @@ POST /api/v1/offers
     "error_message": "reason for failure if success if false"
 }
 ```
+
+## Send Coffee
+OfferPool's XCH Address `xch1hk74cqlndr8zv9aqzgnemxhff830t94wu2s0re79n82j09hhwy5qfpy4mm`
