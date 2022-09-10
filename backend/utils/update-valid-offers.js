@@ -1,18 +1,12 @@
 const { getOfferValidity } = require("./get-offer-summary");
 const { pool } = require("./query-db");
-const crypto = require("crypto");
 const { getTableName } = require("./get-table-name");
-const { boolParse } = require("./bool-parse");
 const logger = require("pino")();
 
 let updating = false;
 let requestToUpdate = 0;
 
 const updateValidOffers = async () => {
-  if (boolParse(process.env.SKIP_UPDATE_STATUS_JOB, false)) {
-    logger.info("Skipping Offer Update Job");
-    return;
-  }
   if (updating) {
     requestToUpdate++;
     return;
@@ -32,10 +26,11 @@ const updateValidOffers = async () => {
   const batches = offers.rows.length / batch_size;
   let currentPosition = 0;
   for (let batch = 0; batch < batches; batch++) {
+    logger.info(`Updating offer batch ${batch} of ${batches}`)
     offerPromises = [];
     for (
       let i = 0;
-      i < 10 && currentPosition < offers.rows.length;
+      i < batch_size && currentPosition < offers.rows.length;
       i++, currentPosition++
     ) {
       const offer = offers.rows[currentPosition].offer;
@@ -59,12 +54,12 @@ const updateValidOffers = async () => {
 
 const updateOffer = async (offer, id) => {
   const offerStatus = await getOfferValidity(offer);
-  if (!offerStatus || !offerStatus.success) {
+  if (!offerStatus) {
     return;
   }
   if (!offerStatus.valid) {
     logger.info(`Updating status of offer ${id}`);
-    pool.query(`UPDATE "${getTableName()}" SET status = 0 WHERE id = $1`, [id]);
+    await pool.query(`UPDATE "${getTableName()}" SET status = 0 WHERE id = $1`, [id]);
   }
 };
 

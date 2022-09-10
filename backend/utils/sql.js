@@ -49,7 +49,50 @@ insert into "${table_name}_cats_info"(id, "name", code, mojos_per_coin) VALUES
 ('8ebf855de6eb146db5602f0456d2f0cbe750d57f821b6f91a8592ee9f1d4cf31', 'Marmot Coin', 'MRMT', 1000),
 ('6d95dae356e32a71db5ddcb42224754a02524c615c5fc35f568c2af04774e589', 'Stably USD', 'USDS', 1000)
 ;
+
+create table "${table_name}_requested_cat"
+(
+    offer_id bigint not null,
+    cat_id   text   not null,
+    constraint "${table_name}_requested_cat_pkey"
+        primary key (offer_id, cat_id)
+);
+
+create index "${table_name}_requested_cat_cat_id_index"
+    on "${table_name}_requested_cat" (cat_id);
+
+create table "${table_name}_offered_cat"
+(
+	offer_id bigint not null,
+	cat_id   text   not null,
+	constraint "${table_name}_offered_cat_pkey"
+		primary key (offer_id, cat_id)
+);
+
+create index "${table_name}_offered_cat_cat_id_index"
+    on "${table_name}_offered_cat" (cat_id);
 `;
+
+const create_nft_table = (table_name) => 
+`create table "${table_name}_nft_info"
+(
+    launcher_id varchar
+        constraint "${table_name}_nft_info_pk" primary key,
+    nft_id     varchar,
+    nft_info   text,
+	success    boolean,
+    minter_did_id varchar,
+	collection_id varchar
+);
+
+create index "${table_name}_nft_info_success_index"
+  on "${table_name}_nft_info" (success);
+
+create index "${table_name}_nft_info_collection_did_index"
+  on "${table_name}_nft_info" (collection_id, minter_did_id);
+`
+
 
 module.exports.table_exists = table_exists;
 module.exports.create_table = create_table;
+module.exports.create_nft_table = create_nft_table;

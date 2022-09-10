@@ -1,5 +1,7 @@
+const { addOfferEntryToPGDB } = require("../../../utils/add-offer-to-pg");
 const { doesOfferExistInPG } = require("../../../utils/does-offer-exist-in-pg");
 const { getOfferSummary } = require("../../../utils/get-offer-summary");
+const logger = require("pino")();
 
 const postOffersRoute = (db) => async (req, res) => {
   try {
@@ -27,8 +29,13 @@ const postOffersRoute = (db) => async (req, res) => {
       return;
     }
     await db.add({ offer_blob: offer });
+
+    // Add the offer to the postgres database right away instead of waiting for ipfs callbacks
+    await addOfferEntryToPGDB(offer);
+
     res.json({ success: true });
-  } catch {
+  } catch(e) {
+    logger.error(e);
     res.json({ success: false, error_message: "unknown error" });
   }
 };
