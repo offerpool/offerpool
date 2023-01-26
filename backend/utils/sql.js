@@ -1,4 +1,4 @@
-const table_exists =
+export const table_exists =
   "SELECT EXISTS ( \
     SELECT FROM information_schema.tables \
     WHERE  table_schema = $1 \
@@ -6,7 +6,7 @@ const table_exists =
     );";
 
 // TODO: use flyway for migrations
-const create_table = (table_name) => `
+export const create_table = (table_name) => `
 create table "${table_name}"
 (
 	id bigserial
@@ -73,7 +73,7 @@ create index "${table_name}_offered_cat_cat_id_index"
     on "${table_name}_offered_cat" (cat_id);
 `;
 
-const create_nft_table = (table_name) => 
+export const create_nft_table = (table_name) => 
 `create table "${table_name}_nft_info"
 (
     launcher_id varchar
@@ -91,8 +91,3 @@ create index "${table_name}_nft_info_success_index"
 create index "${table_name}_nft_info_collection_did_index"
   on "${table_name}_nft_info" (collection_id, minter_did_id);
 `
-
-
-module.exports.table_exists = table_exists;
-module.exports.create_table = create_table;
-module.exports.create_nft_table = create_nft_table;

@@ -1,10 +1,8 @@
-const { toBech32m } = require("./to-bech32");
+import { toBech32m } from "./to-bech32.js";
 
-const getNftId = (launcher_id) => {
+export const getNftId = (launcher_id) => {
   if(!launcher_id) {
     return undefined;
   }
   return toBech32m(launcher_id, "nft");
 }
-
-module.exports.getNftId = getNftId;

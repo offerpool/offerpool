@@ -1,5 +1,3 @@
-const { Pool } = require("pg");
+import pkg from "pg";
 
-const pool = new Pool();
-
-module.exports.pool = pool;
+export const pool = new pkg.Pool();

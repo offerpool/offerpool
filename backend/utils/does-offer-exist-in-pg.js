@@ -1,9 +1,9 @@
-const { pool } = require("./query-db");
-const crypto = require("crypto");
-const { getTableName } = require("./get-table-name");
+import { pool } from "./query-db.js";
+import crypto from "crypto";
+import { getTableName } from "./get-table-name.js";
 
 /** Given an array of offers, return true or false if they exist in the database */
-const doesOfferExistInPG = async (offers) => {
+export const doesOfferExistInPG = async (offers) => {
   if (!offers || offers.length < 1) {
     return [];
   }
@@ -38,5 +38,3 @@ const doesOfferExistInPG = async (offers) => {
   }
   return returnArray;
 };
-
-module.exports.doesOfferExistInPG = doesOfferExistInPG;

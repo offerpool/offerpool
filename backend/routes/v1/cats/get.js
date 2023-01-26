@@ -1,7 +1,7 @@
-const { cat_info, getCatInfo } = require("../../../utils/cat-info-provider");
-const logger = require("pino")();
+import { cat_info, getCatInfo } from "../../../utils/cat-info-provider.js";
+import { logger } from "../../../utils/logger.js";
 
-const getCatsRoute = async (req, res) => {
+export const getCatsRoute = async (req, res) => {
   try {
     // Hack to update the cats information
     await getCatInfo("xch");
@@ -12,4 +12,3 @@ const getCatsRoute = async (req, res) => {
   }
 };
 
-module.exports.getCatsRoute = getCatsRoute;

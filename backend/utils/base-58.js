@@ -1,4 +1,4 @@
 const BASE58CharacterSet = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
-const base58 = require('base-x')(BASE58CharacterSet)
+import  baseX from "base-x";
 
-module.exports.base58 = base58;
+export const base58 = baseX(BASE58CharacterSet);

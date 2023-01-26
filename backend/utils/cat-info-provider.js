@@ -1,12 +1,12 @@
-const { getTableName } = require("./get-table-name");
-const { pool } = require("./query-db");
+import { getTableName } from "./get-table-name.js";
+import { pool } from "./query-db.js";
 
 let lastUpdate = undefined;
-let cat_info = {};
+export let cat_info = {};
 let code_to_id = {};
 const CAT_REFRESH_INTERVAL = 120;
 
-const getCatInfo = async (cat_id) => {
+export const getCatInfo = async (cat_id) => {
   const cacheInvalidTime = new Date(
     new Date().getTime() - CAT_REFRESH_INTERVAL * 1000
   ).toISOString();
@@ -51,6 +51,3 @@ const updateCatInfo = async () => {
   }
   lastUpdate = new Date().toISOString();
 };
-
-module.exports.getCatInfo = getCatInfo;
-module.exports.cat_info = cat_info;

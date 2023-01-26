@@ -1,9 +1,9 @@
-const { create } = require("ipfs-http-client");
-const orbitdb = require("orbit-db");
-const { getTableName } = require("./get-table-name");
-const logger = require("pino")();
+import { create } from "ipfs-http-client";
+import orbitdb from "orbit-db";
+import { getTableName } from "./get-table-name.js";
+import { logger } from "./logger.js";
 
-const getOfferDB = async (orbitDirectoryPrefix) => {
+export const getOfferDB = async (orbitDirectoryPrefix) => {
   const ipfs = await create(process.env.IPFS_HOST);
   if (process.env.MASTER_MULTIADDR) {
     logger.info(`Connecting to Master Node: ${process.env.MASTER_MULTIADDR}`);
@@ -16,7 +16,7 @@ const getOfferDB = async (orbitDirectoryPrefix) => {
   const orbitClient = await orbitdb.createInstance(ipfs, {
     directory,
   });
-  dbAddress = await orbitClient.determineAddress(getTableName(), "eventlog", {
+  const dbAddress = await orbitClient.determineAddress(getTableName(), "eventlog", {
     accessController: {
       write: ["*"],
     },
@@ -25,5 +25,3 @@ const getOfferDB = async (orbitDirectoryPrefix) => {
   let database = await orbitClient.log(dbAddress);
   return database;
 };
-
-module.exports.getOfferDB = getOfferDB;

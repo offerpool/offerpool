@@ -1,8 +1,8 @@
-const { getTableName } = require("./get-table-name");
-const { pool } = require("./query-db");
-const { table_exists, create_table, create_nft_table } = require("./sql");
+import { getTableName } from "./get-table-name.js";
+import { pool } from "./query-db.js";
+import { table_exists, create_table, create_nft_table } from "./sql.js";
 
-const buildPostgresTable = async () => {
+export const buildPostgresTable = async () => {
   console.log("Checking postgres table");
   let result = await pool.query(table_exists, [
     process.env.PGSCHEMA,
@@ -25,5 +25,3 @@ const buildPostgresTable = async () => {
   }
   
 };
-
-module.exports.buildPostgresTable = buildPostgresTable;

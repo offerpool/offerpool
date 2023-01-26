@@ -1,14 +1,14 @@
-const logger = require("pino")();
-const { getNftCoinInfo } = require("./get-offer-summary");
-const { pool } = require("./query-db");
-const { getTableName } = require("./get-table-name");
-const { getNftDTO } = require("./get-nft-dto");
-const { saveNFTInfos } = require("./save-nft-infos");
+import { logger } from "./logger.js"
+import { getNftCoinInfo } from "./get-offer-summary.js";
+import { pool } from "./query-db.js";
+import { getTableName } from "./get-table-name.js";
+import { getNftDTO } from "./get-nft-dto.js";
+import { saveNFTInfos } from "./save-nft-infos.js";
 
 let updating = false;
 let requestToUpdate = 0;
 
-const updateUnsuccessfulNfts = async () => {
+export const updateUnsuccessfulNfts = async () => {
   if (updating) {
     requestToUpdate++;
     return;
@@ -76,5 +76,3 @@ const updateNft = async (launcherId) => {
         logger.error({error: error.message, nfts, nftCoinInfo}, "Error updating NFT")
     }
 } 
-
-module.exports.updateUnsuccessfulNfts = updateUnsuccessfulNfts;

@@ -1,11 +1,11 @@
-const { base58 } = require("../../../../utils/base-58");
-const { getTableName } = require("../../../../utils/get-table-name");
-const { pool } = require("../../../../utils/query-db");
-const { mapCatInfo } = require("../../../mappers/map-cat-info");
-const { mapNftInfo } = require("../../../mappers/map-nft-info");
-const logger = require("pino")();
+import { base58 } from "../../../../utils/base-58.js";
+import { getTableName } from "../../../../utils/get-table-name.js";
+import { pool } from "../../../../utils/query-db.js";
+import { mapCatInfo } from "../../../mappers/map-cat-info.js";
+import { mapNftInfo } from "../../../mappers/map-nft-info.js";
+import { logger } from "../../../../utils/logger.js";
 
-const getOfferByHash = async (req, res) => {
+export const getOfferByHash = async (req, res) => {
     try {
         const encodedHash = req.params.id;
         const hashAsHex = Buffer.from(base58.decode(encodedHash)).toString('hex');
@@ -44,5 +44,3 @@ const mapRowToOffer = async (row) => {
       nft_info: mapNftInfo(row.nft_info)
     };
   };
-
-  module.exports.getOfferByHash = getOfferByHash;

@@ -1,11 +1,11 @@
-const { getCatInfo } = require("../../../utils/cat-info-provider");
-const { getTableName } = require("../../../utils/get-table-name");
-const { pool } = require("../../../utils/query-db");
-const { mapCatInfo } = require("../../mappers/map-cat-info");
-const { mapNftInfo } = require("../../mappers/map-nft-info");
-const logger = require("pino")();
+import { getCatInfo } from "../../../utils/cat-info-provider.js";
+import { getTableName } from "../../../utils/get-table-name.js";
+import { pool } from "../../../utils/query-db.js";
+import { mapCatInfo } from "../../mappers/map-cat-info.js";
+import { mapNftInfo } from "../../mappers/map-nft-info.js";
+import { logger } from "../../../utils/logger.js";
 
-const getOffersRoute = async (req, res) => {
+export const getOffersRoute = async (req, res) => {
   try {
     const pageSize = Math.min(req.query["page_size"] || 100, 100);
     const page = req.query["page"] || 1;
@@ -97,4 +97,3 @@ const mapRowToOffer = async (row) => {
   };
 };
 
-module.exports.getOffersRoute = getOffersRoute;

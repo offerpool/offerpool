@@ -1,11 +1,11 @@
-const { mapCatInfo } = require("../../../../mappers/map-cat-info");
-const { mapMinNftInfo } = require("../../../../mappers/map-nft-info");
-const { getTableName } = require("../../../../../utils/get-table-name");
-const logger = require("pino")();
-const { pool } = require("../../../../../utils/query-db");
-const { base58 } = require("../../../../../utils/base-58");
+import { mapCatInfo } from "../../../../mappers/map-cat-info.js";
+import { mapMinNftInfo } from "../../../../mappers/map-nft-info.js";
+import { getTableName } from "../../../../../utils/get-table-name.js";
+import { logger } from "../../../../../utils/logger.js";
+import { pool } from "../../../../../utils/query-db.js";
+import { base58 } from "../../../../../utils/base-58.js";
 
-const getOffersForCollectionRoute = async (req, res) => {
+export const getOffersForCollectionRoute = async (req, res) => {
     try {
       const did = req.query["did"];
       const collectionId = req.query["collection_id"];
@@ -78,5 +78,3 @@ const mapRowToOffer = async (row) => {
       nft_info: mapMinNftInfo(row.nft_info)
     };
   };
-
-  module.exports.getOffersForCollectionRoute = getOffersForCollectionRoute;

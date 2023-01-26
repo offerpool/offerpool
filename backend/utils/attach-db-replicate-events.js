@@ -1,8 +1,8 @@
 
-const { updatePostgresTable } = require("./update-postgres-table");
-const logger = require("pino")();
+import { updatePostgresTable } from "./update-postgres-table.js";
+import { logger } from "./logger.js";
 
-const attachDbReplicateEvents = async (database) => {
+export const attachDbReplicateEvents = async (database) => {
     database.events.on("replicated", (address) => {
       logger.info("replication event fired");
       updatePostgresTable(database, false);
@@ -19,5 +19,3 @@ const attachDbReplicateEvents = async (database) => {
     );
     await database.load();
 }
-
-module.exports.attachDbReplicateEvents = attachDbReplicateEvents

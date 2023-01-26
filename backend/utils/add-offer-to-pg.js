@@ -1,12 +1,12 @@
-const { getNftDTO } = require("./get-nft-dto");
-const { getOfferSummary, getOfferValidity, getNftCoinInfo } = require("./get-offer-summary");
-const { getTableName } = require("./get-table-name");
-const { pool } = require("./query-db");
-const logger = require("pino")();
-const { saveNFTInfos } = require("./save-nft-infos");
+import { getNftDTO } from "./get-nft-dto.js";
+import { getOfferSummary, getOfferValidity, getNftCoinInfo } from "./get-offer-summary.js";
+import { getTableName } from "./get-table-name.js";
+import { pool } from "./query-db.js";
+import { logger } from "./logger.js";
+import { saveNFTInfos } from "./save-nft-infos.js";
 
 /** Adds an offer to the postgres table, returns false if the offer could not be added */
-const addOfferEntryToPGDB = async (offer) => {
+export const addOfferEntryToPGDB = async (offer) => {
   try {
     const offerSummary = await getOfferSummary(offer);
     // If the chia client can't parse the offer, or it's an xch for xch offer (CAT1 to CAT1/XCH), ignore it
@@ -58,8 +58,6 @@ const addOfferEntryToPGDB = async (offer) => {
   }
   return true;
 };
-
-module.exports.addOfferEntryToPGDB = addOfferEntryToPGDB;
 
 
 async function commitToPostgres(offer, status, offered_cats, requested_cats, offerSummary) {

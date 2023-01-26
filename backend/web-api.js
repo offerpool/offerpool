@@ -1,21 +1,23 @@
-const express = require("express");
-const boolParser = require("express-query-boolean");
-const logger = require("pino")();
-const pinoHttp = require("pino-http");
+import dotenv from "dotenv";
+dotenv.config();
 
-require("dotenv").config();
+import express from "express";
+import boolParser from "express-query-boolean";
+import { logger } from "./utils/logger.js";
+import pinoHttp from "pino-http";
+import { getOfferDB } from "./utils/get-offer-db.js";
+import { getOffersRoute } from "./routes/v1/offers/get.js";
+import { postOffersRoute } from "./routes/v1/offers/post.js";
+import { getCatsRoute } from "./routes/v1/cats/get.js";
+import { customLogLevel } from "./utils/http-request-log-level.js";
+import { liveRoute } from "./routes/diagnostics/live.js";
+import { readyRoute } from "./routes/diagnostics/ready.js";
+import { getOffersForCollectionRoute } from "./routes/v1/offers/nft/collection/get.js";
+import compression from "compression";
+import cors from 'cors';
+import { getOfferByHash } from "./routes/v1/offers/[id]/get.js";
 
-const { getOfferDB } = require("./utils/get-offer-db");
-const { getOffersRoute } = require("./routes/v1/offers/get");
-const { postOffersRoute } = require("./routes/v1/offers/post");
-const { getCatsRoute } = require("./routes/v1/cats/get");
-const { customLogLevel } = require("./utils/http-request-log-level");
-const { liveRoute } = require("./routes/diagnostics/live");
-const { readyRoute } = require("./routes/diagnostics/ready");
-const { getOffersForCollectionRoute } = require("./routes/v1/offers/nft/collection/get");
-const compression = require("compression");
-const cors = require('cors');
-const { getOfferByHash } = require("./routes/v1/offers/[id]/get");
+
 
 if (process.env.MAX_EVENT_LISTENERS) {
   require("events").EventEmitter.defaultMaxListeners = parseInt(
@@ -25,12 +27,7 @@ if (process.env.MAX_EVENT_LISTENERS) {
 
 let db = undefined;
 
-const start = async () => {
-  db = await getOfferDB("web-api");
-  startServer();
-};
-
-startServer = () => {
+const startServer = () => {
   const app = express();
   const port = 3000;
 
@@ -57,6 +54,11 @@ startServer = () => {
   app.listen(process.env.port || 3000, () => {
     logger.info(`Listening at http://localhost:${port}`);
   });
+};
+
+const start = async () => {
+  db = await getOfferDB("web-api");
+  startServer();
 };
 
 start();

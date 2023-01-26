@@ -1,6 +1,6 @@
-const { getCatInfo } = require("../../utils/cat-info-provider");
+import { getCatInfo } from "../../utils/cat-info-provider.js";
 
-const mapCatInfo = async (obj) => {
+export const mapCatInfo = async (obj) => {
     const ret = [];
     for (let cat in obj) {
       const cat_info = await getCatInfo(cat);
@@ -14,6 +14,3 @@ const mapCatInfo = async (obj) => {
     }
     return ret;
   };
-
-  
-module.exports.mapCatInfo = mapCatInfo;

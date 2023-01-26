@@ -1,5 +1,5 @@
 // Define a custom logger level
-const customLogLevel = (res, err) => {
+export const customLogLevel = (res, err) => {
   if (res.statusCode >= 400 && res.statusCode < 500) {
     return "warn";
   } else if (res.statusCode >= 500 || err) {
@@ -9,5 +9,3 @@ const customLogLevel = (res, err) => {
   }
   return "info";
 };
-
-module.exports.customLogLevel = customLogLevel;

@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "main": "index.js",
   "license": "MIT",
+  "type": "module",
   "dependencies": {
     "base-x": "^4.0.0",
     "bech32": "^2.0.0",
@@ -11,9 +12,9 @@
     "dotenv": "^14.2.0",
     "express": "^4.17.2",
     "express-query-boolean": "^2.0.0",
-    "ipfs-http-client": "^55.0.0",
+    "ipfs-http-client": "^60.0.0",
     "node-fetch": "^2.6.1",
-    "orbit-db": "^0.28.0",
+    "orbit-db": "^0.29.0",
     "pg": "^8.7.1",
     "pino": "^7.6.5",
     "pino-http": "^6.6.0"
@@ -23,8 +24,8 @@
     "prettier": "^2.5.1"
   },
   "scripts": {
-    "start": "node web-api.js",
-    "start-worker": "node worker.js",
+    "start": "node -r dotenv/config web-api.js",
+    "start-worker": "node -r dotenv/config worker.js",
     "clean": "npx prettier -w ."
   }
 }

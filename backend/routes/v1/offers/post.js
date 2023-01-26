@@ -1,9 +1,9 @@
-const { addOfferEntryToPGDB } = require("../../../utils/add-offer-to-pg");
-const { doesOfferExistInPG } = require("../../../utils/does-offer-exist-in-pg");
-const { getOfferSummary } = require("../../../utils/get-offer-summary");
-const logger = require("pino")();
+import { addOfferEntryToPGDB } from "../../../utils/add-offer-to-pg.js";
+import { doesOfferExistInPG } from "../../../utils/does-offer-exist-in-pg.js";
+import { getOfferSummary } from "../../../utils/get-offer-summary.js";
+import { logger } from "../../../utils/logger.js";
 
-const postOffersRoute = (db) => async (req, res) => {
+export const postOffersRoute = (db) => async (req, res) => {
   try {
     const offer = req.body.offer;
     if (!offer || !offer.startsWith || !offer.startsWith("offer")) {
@@ -40,4 +40,3 @@ const postOffersRoute = (db) => async (req, res) => {
   }
 };
 
-module.exports.postOffersRoute = postOffersRoute;

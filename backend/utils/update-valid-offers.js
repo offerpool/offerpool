@@ -1,12 +1,12 @@
-const { getOfferValidity } = require("./get-offer-summary");
-const { pool } = require("./query-db");
-const { getTableName } = require("./get-table-name");
-const logger = require("pino")();
+import { getOfferValidity } from "./get-offer-summary.js";
+import { pool } from "./query-db.js";
+import { getTableName } from "./get-table-name.js";
+import { logger } from "./logger.js";
 
 let updating = false;
 let requestToUpdate = 0;
 
-const updateValidOffers = async () => {
+export const updateValidOffers = async () => {
   if (updating) {
     requestToUpdate++;
     return;
@@ -62,5 +62,3 @@ const updateOffer = async (offer, id) => {
     await pool.query(`UPDATE "${getTableName()}" SET status = 0 WHERE id = $1`, [id]);
   }
 };
-
-module.exports.updateValidOffers = updateValidOffers;

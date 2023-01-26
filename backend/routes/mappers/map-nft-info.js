@@ -1,6 +1,6 @@
-const { getNftId } = require("../../utils/get-nft-id");
+import { getNftId } from "../../utils/get-nft-id.js";
 
-const mapNftInfo = (nftInfo) => {
+export const mapNftInfo = (nftInfo) => {
     if(!nftInfo?.length) {
       return undefined;
     }
@@ -10,7 +10,7 @@ const mapNftInfo = (nftInfo) => {
     return nftInfo;
   }
 
-const mapMinNftInfo = (nftInfo) => {
+export const mapMinNftInfo = (nftInfo) => {
   if(!nftInfo?.length) {
     return undefined;
   }
@@ -24,6 +24,3 @@ const mapMinNftInfo = (nftInfo) => {
     }
   });
 }
-
-module.exports.mapNftInfo = mapNftInfo;
-module.exports.mapMinNftInfo = mapMinNftInfo;

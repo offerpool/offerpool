@@ -1,16 +1,17 @@
-const logger = require("pino")();
+import dotenv from "dotenv";
+dotenv.config();
 
-require("dotenv").config();
+import { logger } from "./utils/logger.js";
 
 const OFFER_CHECK_INTERVAL = process.env.OFFER_CHECK_INTERVAL || 120; // Update offers every 120 seconds by default
 const NFT_CHECK_INTERVAL = process.env.NFT_CHECK_INTERVAL || 187; // Update offers every 180 seconds by default
 
-const { buildPostgresTable } = require("./utils/build-postgres-table");
-const { updatePostgresTable } = require("./utils/update-postgres-table");
-const { getOfferDB } = require("./utils/get-offer-db");
-const { updateValidOffers } = require("./utils/update-valid-offers");
-const { attachDbReplicateEvents } = require("./utils/attach-db-replicate-events");
-const { updateUnsuccessfulNfts } = require("./utils/update-unsuccessful-nfts");
+import { buildPostgresTable } from "./utils/build-postgres-table.js";
+import { updatePostgresTable } from "./utils/update-postgres-table.js";
+import { getOfferDB } from "./utils/get-offer-db.js";
+import { updateValidOffers } from "./utils/update-valid-offers.js";
+import { attachDbReplicateEvents } from "./utils/attach-db-replicate-events.js";
+import { updateUnsuccessfulNfts } from "./utils/update-unsuccessful-nfts.js";
 
 if (process.env.MAX_EVENT_LISTENERS) {
   require("events").EventEmitter.defaultMaxListeners = parseInt(

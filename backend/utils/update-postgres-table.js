@@ -1,19 +1,19 @@
-const { addOfferEntryToPGDB } = require("./add-offer-to-pg");
-const { doesOfferExistInPG } = require("./does-offer-exist-in-pg");
-const logger = require("pino")();
+import { addOfferEntryToPGDB } from "./add-offer-to-pg.js";
+import { doesOfferExistInPG } from "./does-offer-exist-in-pg.js";
+import { logger } from "./logger.js"
 
 let updateInProgress = false;
 let requestsForAdditionalUpdates = 0;
 const ENTRIES_PER_ITER = 100;
 
-const updatePostgresTable = async (db, starting) => {
+export const updatePostgresTable = async (db, starting) => {
   if (updateInProgress) {
     requestsForAdditionalUpdates++;
     return;
   }
   updateInProgress = true;
-  offeredAdded = 0;
-  start = new Date().getTime();
+  let offersAdded = 0;
+  const start = new Date().getTime();
 
   let dupesHit = 0;
   let offersWereFound = true;
@@ -30,10 +30,10 @@ const updatePostgresTable = async (db, starting) => {
     });
     const offersThatAlreadyExist = await doesOfferExistInPG(offerArray);
     dupesHit += offersThatAlreadyExist.filter((x) => x).length || 0;
-    for (i = 0; i < offerArray.length; i++) {
+    for (let i = 0; i < offerArray.length; i++) {
       if (!offersThatAlreadyExist[i]) {
         await addOfferEntryToPGDB(offerArray[i]);
-        offeredAdded++;
+        offersAdded++;
       }
     }
     lastSeenHash = results?.pop()?.hash;
@@ -45,7 +45,7 @@ const updatePostgresTable = async (db, starting) => {
     {
       source: "update-postgres-table",
       time: (new Date().getTime() - start) / 1000,
-      offers_added: offeredAdded,
+      offers_added: offersAdded,
     },
     "Scanned OrbitDB for offers"
   );
@@ -57,5 +57,3 @@ const updatePostgresTable = async (db, starting) => {
     updatePostgresTable(db, false);
   }
 };
-
-module.exports.updatePostgresTable = updatePostgresTable;

@@ -1,4 +1,4 @@
-const { bech32m } = require('bech32');
+import { bech32m } from 'bech32';
 
 function removePrefix(value, prefix) {
     if (value.startsWith(prefix)) {
@@ -8,7 +8,7 @@ function removePrefix(value, prefix) {
     return value;
 }
 
-function toBech32m(value, prefix) {
+export function toBech32m(value, prefix) {
     if (value.startsWith(prefix)) {
         return value;
     }
@@ -18,10 +18,7 @@ function toBech32m(value, prefix) {
     return bech32m.encode(prefix, words);
 }
 
-function fromBech32m(value) {
+export function fromBech32m(value) {
     const data = bech32m.decode(value);
     return Buffer.from(bech32m.fromWords(data.words)).toString('hex');
 }
-
-module.exports.toBech32m = toBech32m;
-module.exports.fromBech32m = fromBech32m;

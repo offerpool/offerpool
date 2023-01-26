@@ -1,9 +1,9 @@
-const fs = require("fs");
-const path = require("path");
-const https = require("https");
-const fetch = require("node-fetch").default;
-const crypto = require("crypto");
-const logger = require("pino")();
+import fs from "fs";
+import path from "path";
+import https from "https";
+import fetch from "node-fetch";
+import crypto from "crypto";
+import { logger } from "./logger.js"
 
 const options = {
   cert: fs.readFileSync(
@@ -19,7 +19,7 @@ const options = {
 
 const sslConfiguredAgent = new https.Agent(options);
 
-const getOfferSummary = async (offer) => {
+export const getOfferSummary = async (offer) => {
   const summary = await fetch(
     `${process.env.WALLET_RPC_HOST}/get_offer_summary`,
     {
@@ -32,7 +32,7 @@ const getOfferSummary = async (offer) => {
   return await summary.json();
 };
 
-const getOfferValidity = async (offer) => {
+export const getOfferValidity = async (offer) => {
   const summary = await fetch(
     `${process.env.WALLET_RPC_HOST}/check_offer_validity`,
     {
@@ -45,7 +45,7 @@ const getOfferValidity = async (offer) => {
   return await summary.json();
 };
 
-const getNftCoinInfo = async (coin_id) => {
+export const getNftCoinInfo = async (coin_id) => {
   const summary = await fetch(
     `${process.env.WALLET_RPC_HOST}/nft_get_info`,
     {
@@ -75,10 +75,10 @@ const getNftCoinInfo = async (coin_id) => {
     body: JSON.stringify({ coin_id }),
   });
   if(did_owner_response.status < 300) {
-    did_data = await did_owner_response.json();
+    const did_data = await did_owner_response.json();
     result.minter_did_id = did_data.did_id;
   } else {
-    respText = did_owner_response.text();
+    const respText = did_owner_response.text();
     logger.silent({response: respText, coin_id}, "error getting did owner")
     result.success = false;
   }
@@ -89,7 +89,7 @@ const getNftCoinInfo = async (coin_id) => {
   return result;
 };
 
-const getNFTMetadata = async (nft_info) => {
+export const getNFTMetadata = async (nft_info) => {
   // If there is no metadata, consider it successful
   let success = true;
   for(let i = 0; i < nft_info?.metadata_uris?.length ?? 0; i++) {
@@ -116,8 +116,3 @@ const getNFTMetadata = async (nft_info) => {
     success,
    }
 }
-
-
-module.exports.getOfferSummary = getOfferSummary;
-module.exports.getOfferValidity = getOfferValidity;
-module.exports.getNftCoinInfo = getNftCoinInfo;

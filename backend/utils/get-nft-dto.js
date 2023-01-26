@@ -1,4 +1,4 @@
-const getNftDTO = (nftCoinId, nftCoinInfo) => {
+export const getNftDTO = (nftCoinId, nftCoinInfo) => {
     return {
       coin_id: nftCoinId,
       nft_info: nftCoinInfo.nft_info,
@@ -7,5 +7,3 @@ const getNftDTO = (nftCoinId, nftCoinInfo) => {
       collection_id: nftCoinInfo.collection_id,
     };
   };
-
-module.exports.getNftDTO = getNftDTO;
