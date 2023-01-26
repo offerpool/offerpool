@@ -2,7 +2,7 @@ import { pool } from "./query-db.js";
 import { getTableName } from "./get-table-name.js";
 
 
-export async function saveNFTInfos(nftInfos) {
+export async function saveNFTInfos(nftInfos: any) {
     for(let nftInfo of nftInfos) {
         const result = await pool.query(
             `INSERT into "${getTableName()}_nft_info" as nft (launcher_id, nft_info, success, minter_did_id, collection_id) 

@@ -5,7 +5,7 @@ import { logger } from "../../../../../utils/logger.js";
 import { pool } from "../../../../../utils/query-db.js";
 import { base58 } from "../../../../../utils/base-58.js";
 
-export const getOffersForCollectionRoute = async (req, res) => {
+export const getOffersForCollectionRoute = async (req: any, res: any) => {
     try {
       const did = req.query["did"];
       const collectionId = req.query["collection_id"];
@@ -61,13 +61,13 @@ export const getOffersForCollectionRoute = async (req, res) => {
       res.send({
         offers: offers,
       })
-    } catch (error) {
-        logger.error({error: error.message, query: req.query}, "Error getting offers")
+    } catch (error: any) {
+        logger.error({error: error?.message, query: req.query}, "Error getting offers")
         res.status(500).send();
     }
 }
 
-const mapRowToOffer = async (row) => {
+const mapRowToOffer = async (row: any) => {
     return {
       id: base58.encode(row.hash),
       active: row.status ? true : false,

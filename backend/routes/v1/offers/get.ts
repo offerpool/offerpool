@@ -5,7 +5,7 @@ import { mapCatInfo } from "../../mappers/map-cat-info.js";
 import { mapNftInfo } from "../../mappers/map-nft-info.js";
 import { logger } from "../../../utils/logger.js";
 
-export const getOffersRoute = async (req, res) => {
+export const getOffersRoute = async (req: any, res: any) => {
   try {
     const pageSize = Math.min(req.query["page_size"] || 100, 100);
     const page = req.query["page"] || 1;
@@ -84,7 +84,7 @@ export const getOffersRoute = async (req, res) => {
   
 };
 
-const mapRowToOffer = async (row) => {
+const mapRowToOffer = async (row: any) => {
   return {
     offer: row.offer,
     summary: row.parsed_offer,

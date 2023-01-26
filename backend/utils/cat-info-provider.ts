@@ -1,12 +1,12 @@
 import { getTableName } from "./get-table-name.js";
 import { pool } from "./query-db.js";
 
-let lastUpdate = undefined;
-export let cat_info = {};
-let code_to_id = {};
+let lastUpdate: string | undefined = undefined;
+export let cat_info: Record<string, any> = {};
+let code_to_id: Record<string, any> = {};
 const CAT_REFRESH_INTERVAL = 120;
 
-export const getCatInfo = async (cat_id) => {
+export const getCatInfo = async (cat_id: string) => {
   const cacheInvalidTime = new Date(
     new Date().getTime() - CAT_REFRESH_INTERVAL * 1000
   ).toISOString();
@@ -22,7 +22,7 @@ export const getCatInfo = async (cat_id) => {
   return cat_info[cat_id] || unknownCatId(cat_id);
 };
 
-const unknownCatId = (cat_id) => {
+const unknownCatId = (cat_id: string) => {
   return {
     id: cat_id,
     cat_name: `Unknown ${cat_id.slice(0, 5)}...${cat_id.slice(

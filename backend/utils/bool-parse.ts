@@ -1,4 +1,4 @@
-export const boolParse = (value, defaultValue) => {
+export const boolParse = (value: string, defaultValue: boolean) => {
   if (value === undefined || value === null) {
     return defaultValue;
   }

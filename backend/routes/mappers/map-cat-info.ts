@@ -1,6 +1,6 @@
 import { getCatInfo } from "../../utils/cat-info-provider.js";
 
-export const mapCatInfo = async (obj) => {
+export const mapCatInfo = async (obj: any) => {
     const ret = [];
     for (let cat in obj) {
       const cat_info = await getCatInfo(cat);

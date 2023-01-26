@@ -5,7 +5,7 @@ import { mapCatInfo } from "../../../mappers/map-cat-info.js";
 import { mapNftInfo } from "../../../mappers/map-nft-info.js";
 import { logger } from "../../../../utils/logger.js";
 
-export const getOfferByHash = async (req, res) => {
+export const getOfferByHash = async (req: any, res: any) => {
     try {
         const encodedHash = req.params.id;
         const hashAsHex = Buffer.from(base58.decode(encodedHash)).toString('hex');
@@ -26,13 +26,13 @@ export const getOfferByHash = async (req, res) => {
         } else {
             res.json(await mapRowToOffer(result.rows[0]))
         }
-    } catch (error) {
-        logger.error({error: error.message, query: req.query}, "Error getting offers")
+    } catch (error: any) {
+        logger.error({error: error?.message, query: req.query}, "Error getting offers")
         res.status(500).send();
     }
 }
 
-const mapRowToOffer = async (row) => {
+const mapRowToOffer = async (row: any) => {
     return {
       offer: row.offer,
       summary: row.parsed_offer,

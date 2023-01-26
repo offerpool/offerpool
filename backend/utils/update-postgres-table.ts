@@ -6,7 +6,7 @@ let updateInProgress = false;
 let requestsForAdditionalUpdates = 0;
 const ENTRIES_PER_ITER = 100;
 
-export const updatePostgresTable = async (db, starting) => {
+export const updatePostgresTable = async (db: any, starting: any) => {
   if (updateInProgress) {
     requestsForAdditionalUpdates++;
     return;
@@ -19,10 +19,10 @@ export const updatePostgresTable = async (db, starting) => {
   let offersWereFound = true;
   let lastSeenHash = undefined;
   while (
-    dupesHit <= process.env.DATABASE_UPDATE_DUPE_LIMIT &&
+    (dupesHit <= parseInt(process.env.DATABASE_UPDATE_DUPE_LIMIT ?? "100")) &&
     offersWereFound
   ) {
-    let results = db
+    let results: any[] = db
       .iterator({ limit: ENTRIES_PER_ITER, reverse: true, lt: lastSeenHash })
       .collect();
     const offerArray = results.map((entry) => {

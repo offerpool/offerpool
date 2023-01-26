@@ -1,17 +1,18 @@
 import fs from "fs";
 import path from "path";
 import https from "https";
-import fetch from "node-fetch";
+import * as fetchModule from "node-fetch";
 import crypto from "crypto";
 import { logger } from "./logger.js"
+const fetch = fetchModule.default.default;
 
 const options = {
   cert: fs.readFileSync(
-    path.resolve(process.env.CHIA_SSL_DIR, "./private_wallet.crt"),
+    path.resolve(process.env.CHIA_SSL_DIR ?? "", "./private_wallet.crt"),
     `utf-8`
   ),
   key: fs.readFileSync(
-    path.resolve(process.env.CHIA_SSL_DIR, "./private_wallet.key"),
+    path.resolve(process.env.CHIA_SSL_DIR ?? "", "./private_wallet.key"),
     "utf-8"
   ),
   rejectUnauthorized: false,
@@ -19,7 +20,7 @@ const options = {
 
 const sslConfiguredAgent = new https.Agent(options);
 
-export const getOfferSummary = async (offer) => {
+export const getOfferSummary = async (offer: string) => {
   const summary = await fetch(
     `${process.env.WALLET_RPC_HOST}/get_offer_summary`,
     {
@@ -32,7 +33,7 @@ export const getOfferSummary = async (offer) => {
   return await summary.json();
 };
 
-export const getOfferValidity = async (offer) => {
+export const getOfferValidity = async (offer: string) => {
   const summary = await fetch(
     `${process.env.WALLET_RPC_HOST}/check_offer_validity`,
     {
@@ -45,7 +46,7 @@ export const getOfferValidity = async (offer) => {
   return await summary.json();
 };
 
-export const getNftCoinInfo = async (coin_id) => {
+export const getNftCoinInfo = async (coin_id: string) => {
   const summary = await fetch(
     `${process.env.WALLET_RPC_HOST}/nft_get_info`,
     {
@@ -89,7 +90,7 @@ export const getNftCoinInfo = async (coin_id) => {
   return result;
 };
 
-export const getNFTMetadata = async (nft_info) => {
+export const getNFTMetadata = async (nft_info: any) => {
   // If there is no metadata, consider it successful
   let success = true;
   for(let i = 0; i < nft_info?.metadata_uris?.length ?? 0; i++) {

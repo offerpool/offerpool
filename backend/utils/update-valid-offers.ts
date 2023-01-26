@@ -27,7 +27,7 @@ export const updateValidOffers = async () => {
   let currentPosition = 0;
   for (let batch = 0; batch < batches; batch++) {
     logger.info(`Updating offer batch ${batch} of ${batches}`)
-    offerPromises = [];
+    let offerPromises = [];
     for (
       let i = 0;
       i < batch_size && currentPosition < offers.rows.length;
@@ -52,7 +52,7 @@ export const updateValidOffers = async () => {
   }
 };
 
-const updateOffer = async (offer, id) => {
+const updateOffer = async (offer: string, id: string) => {
   const offerStatus = await getOfferValidity(offer);
   if (!offerStatus) {
     return;

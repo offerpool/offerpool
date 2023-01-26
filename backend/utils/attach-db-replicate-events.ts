@@ -2,8 +2,8 @@
 import { updatePostgresTable } from "./update-postgres-table.js";
 import { logger } from "./logger.js";
 
-export const attachDbReplicateEvents = async (database) => {
-    database.events.on("replicated", (address) => {
+export const attachDbReplicateEvents = async (database: any) => {
+    database.events.on("replicated", (address: any) => {
       logger.info("replication event fired");
       updatePostgresTable(database, false);
     });
@@ -13,7 +13,7 @@ export const attachDbReplicateEvents = async (database) => {
     });
     database.events.on(
       "replicate.progress",
-      (address, hash, entry, progress, have) => {
+      (address: any, hash: any, entry: any, progress: any, have: any) => {
         logger.debug({ progress }, "offer database replication in progress");
       }
     );

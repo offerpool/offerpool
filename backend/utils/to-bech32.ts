@@ -1,6 +1,6 @@
 import { bech32m } from 'bech32';
 
-function removePrefix(value, prefix) {
+function removePrefix(value: string, prefix: string) {
     if (value.startsWith(prefix)) {
         return value.slice(prefix.length);
     }
@@ -8,7 +8,7 @@ function removePrefix(value, prefix) {
     return value;
 }
 
-export function toBech32m(value, prefix) {
+export function toBech32m(value: string, prefix: string) {
     if (value.startsWith(prefix)) {
         return value;
     }
@@ -18,7 +18,7 @@ export function toBech32m(value, prefix) {
     return bech32m.encode(prefix, words);
 }
 
-export function fromBech32m(value) {
+export function fromBech32m(value: string) {
     const data = bech32m.decode(value);
     return Buffer.from(bech32m.fromWords(data.words)).toString('hex');
 }

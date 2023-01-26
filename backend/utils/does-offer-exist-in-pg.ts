@@ -3,7 +3,7 @@ import crypto from "crypto";
 import { getTableName } from "./get-table-name.js";
 
 /** Given an array of offers, return true or false if they exist in the database */
-export const doesOfferExistInPG = async (offers) => {
+export const doesOfferExistInPG = async (offers: string[]) => {
   if (!offers || offers.length < 1) {
     return [];
   }
@@ -27,7 +27,7 @@ export const doesOfferExistInPG = async (offers) => {
   );
 
   // turn the row hashes into a map
-  const existingHashes = {};
+  const existingHashes: Record<string, boolean> = {};
   for (let i = 0; i < results.rows.length; i++) {
     existingHashes[results.rows[i].hash] = true;
   }

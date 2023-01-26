@@ -75,6 +75,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<OfferList />} />
+          <Route path="/offers/:id" element={<OfferList />} />
         </Routes>
       </BrowserRouter>
 

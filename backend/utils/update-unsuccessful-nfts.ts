@@ -37,7 +37,7 @@ export const updateUnsuccessfulNfts = async () => {
   const batches = nftLauncherIds.rows.length / batch_size;
   let currentPosition = 0;
   for (let batch = 0; batch < batches; batch++) {
-    promises = [];
+    const promises: Promise<void>[] = [];
     for (
       let i = 0;
       i < 10 && currentPosition < nftLauncherIds.rows.length;
@@ -62,7 +62,7 @@ export const updateUnsuccessfulNfts = async () => {
   }
 };
 
-const updateNft = async (launcherId) => {
+const updateNft = async (launcherId: string) => {
     const nfts = []
     let nftCoinInfo = undefined;
     try {
@@ -72,7 +72,7 @@ const updateNft = async (launcherId) => {
             logger.info(`fixing up ${launcherId}`);
         }
         await saveNFTInfos(nfts)
-    } catch (error) {
-        logger.error({error: error.message, nfts, nftCoinInfo}, "Error updating NFT")
+    } catch (error: any) {
+        logger.error({error: error?.message, nfts, nftCoinInfo}, "Error updating NFT")
     }
 } 

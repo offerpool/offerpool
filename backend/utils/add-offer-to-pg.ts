@@ -6,7 +6,7 @@ import { logger } from "./logger.js";
 import { saveNFTInfos } from "./save-nft-infos.js";
 
 /** Adds an offer to the postgres table, returns false if the offer could not be added */
-export const addOfferEntryToPGDB = async (offer) => {
+export const addOfferEntryToPGDB = async (offer: string) => {
   try {
     const offerSummary = await getOfferSummary(offer);
     // If the chia client can't parse the offer, or it's an xch for xch offer (CAT1 to CAT1/XCH), ignore it
@@ -60,7 +60,7 @@ export const addOfferEntryToPGDB = async (offer) => {
 };
 
 
-async function commitToPostgres(offer, status, offered_cats, requested_cats, offerSummary) {
+async function commitToPostgres(offer: string, status: number, offered_cats: string[], requested_cats: string[], offerSummary: any) {
   // TODO: Make a single transaction
   const result = await pool.query(
     `INSERT into "${getTableName()}"(hash, offer, status, offered_cats, requested_cats, parsed_offer) VALUES (sha256($1), $2, $3, $4, $5, $6) RETURNING id;`,

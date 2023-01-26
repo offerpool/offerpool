@@ -3,8 +3,8 @@ dotenv.config();
 
 import { logger } from "./utils/logger.js";
 
-const OFFER_CHECK_INTERVAL = process.env.OFFER_CHECK_INTERVAL || 120; // Update offers every 120 seconds by default
-const NFT_CHECK_INTERVAL = process.env.NFT_CHECK_INTERVAL || 187; // Update offers every 180 seconds by default
+const OFFER_CHECK_INTERVAL = parseInt(process.env.OFFER_CHECK_INTERVAL || "120"); // Update offers every 120 seconds by default
+const NFT_CHECK_INTERVAL = parseInt(process.env.NFT_CHECK_INTERVAL || "187"); // Update offers every 180 seconds by default
 
 import { buildPostgresTable } from "./utils/build-postgres-table.js";
 import { updatePostgresTable } from "./utils/update-postgres-table.js";

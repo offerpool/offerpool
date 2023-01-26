@@ -3,7 +3,7 @@ import { doesOfferExistInPG } from "../../../utils/does-offer-exist-in-pg.js";
 import { getOfferSummary } from "../../../utils/get-offer-summary.js";
 import { logger } from "../../../utils/logger.js";
 
-export const postOffersRoute = (db) => async (req, res) => {
+export const postOffersRoute = (db: any) => async (req: any, res: any) => {
   try {
     const offer = req.body.offer;
     if (!offer || !offer.startsWith || !offer.startsWith("offer")) {

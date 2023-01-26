@@ -25,7 +25,7 @@ if (process.env.MAX_EVENT_LISTENERS) {
   );
 }
 
-let db = undefined;
+let db: any = undefined;
 
 const startServer = () => {
   const app = express();
@@ -33,7 +33,7 @@ const startServer = () => {
 
   app.use(express.json({limit: "500kb"}));
   app.use(boolParser());
-  app.use(pinoHttp({ customLogLevel: customLogLevel }));
+  app.use(pinoHttp.default({ customLogLevel: customLogLevel }));
   app.use(compression());
 
   app.get("/api/v1/offers", getOffersRoute);

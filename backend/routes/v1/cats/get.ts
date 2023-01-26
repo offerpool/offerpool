@@ -1,7 +1,7 @@
 import { cat_info, getCatInfo } from "../../../utils/cat-info-provider.js";
 import { logger } from "../../../utils/logger.js";
 
-export const getCatsRoute = async (req, res) => {
+export const getCatsRoute = async (req: any, res: any) => {
   try {
     // Hack to update the cats information
     await getCatInfo("xch");
