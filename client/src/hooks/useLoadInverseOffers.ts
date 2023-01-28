@@ -1,14 +1,24 @@
 import { useState } from "react";
 import axios from "axios";
+import { CatInfo } from "./CatInfo";
 
-export function useLoadInverseOffers(fromCat, toCat) {
+export function useLoadInverseOffers(
+  fromCat: CatInfo | undefined,
+  toCat: CatInfo | undefined
+) {
   const [loading, setLoading] = useState(false);
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState<any>([]);
   const [hasNextPage, setHasNextPage] = useState(!fromCat || !toCat);
   const [error, setError] = useState();
   const [page, setPage] = useState(1);
 
-  async function loadItems(currentPage) {
+  async function loadItems(currentPage: number) {
+    if (!fromCat || !toCat) {
+      return {
+        hasNextPage: false,
+        data: [],
+      };
+    }
     if (fromCat.id === "any" && toCat.id === "any") {
       return {
         hasNextPage: false,
@@ -25,7 +35,7 @@ export function useLoadInverseOffers(fromCat, toCat) {
     }
 
     while (loop && moreToLoad) {
-      const params = {
+      const params: any = {
         page: currentPage,
         page_size: pageSize,
       };
@@ -57,9 +67,9 @@ export function useLoadInverseOffers(fromCat, toCat) {
       currentPage++;
     }
     if (fromCat.id !== "any" && toCat.id !== "any") {
-        tempInverseOffers.sort((a, b) => {
-            return a.price - b.price;
-        });
+      tempInverseOffers.sort((a, b) => {
+        return a.price - b.price;
+      });
     }
 
     return {
@@ -73,20 +83,20 @@ export function useLoadInverseOffers(fromCat, toCat) {
     try {
       const { data, hasNextPage: newHasNextPage } = await loadItems(page);
       setPage(page + 1);
-      setItems((current) => [...current, ...data]);
+      setItems((current: any[]) => [...current, ...data]);
       setHasNextPage(newHasNextPage);
-    } catch (err) {
+    } catch (err: any) {
       setError(err);
     } finally {
       setLoading(false);
     }
   }
 
-  function clearInverseOfferState(fromCat, toCat) {
+  function clearInverseOfferState() {
     setPage(1);
     setItems([]);
     setHasNextPage(true);
-    setError();
+    setError(undefined);
     setLoading(false);
   }
 

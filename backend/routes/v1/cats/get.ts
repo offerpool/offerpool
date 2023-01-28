@@ -7,8 +7,7 @@ export const getCatsRoute = async (req: any, res: any) => {
     await getCatInfo("xch");
     res.json(cat_info);
   } catch (error) {
-    logger.error({error}, "Get Cat Error");
+    logger.error({ error }, "Get Cat Error");
     res.status(500).send();
   }
 };
-

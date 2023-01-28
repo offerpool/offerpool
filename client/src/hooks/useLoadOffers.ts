@@ -1,14 +1,24 @@
 import { useState } from "react";
 import axios from "axios";
+import { CatInfo } from "./CatInfo";
 
-export function useLoadOffers(fromCat, toCat) {
+export function useLoadOffers(
+  fromCat: CatInfo | undefined,
+  toCat: CatInfo | undefined
+) {
   const [loading, setLoading] = useState(false);
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState<any[]>([]);
   const [hasNextPage, setHasNextPage] = useState(!fromCat || !toCat);
   const [error, setError] = useState();
   const [page, setPage] = useState(1);
 
-  async function loadItems(currentPage) {
+  async function loadItems(currentPage: number) {
+    if (!fromCat || !toCat) {
+      return {
+        hasNextPage: false,
+        data: [],
+      };
+    }
     let moreToLoad = true;
     const tempOffers = [];
     let pageSize = 100;
@@ -18,7 +28,7 @@ export function useLoadOffers(fromCat, toCat) {
     }
 
     while (loop && moreToLoad) {
-      const params = {
+      const params: any = {
         page: currentPage,
         page_size: pageSize,
       };
@@ -71,18 +81,18 @@ export function useLoadOffers(fromCat, toCat) {
       setPage(page + 1);
       setItems((current) => [...current, ...data]);
       setHasNextPage(newHasNextPage);
-    } catch (err) {
+    } catch (err: any) {
       setError(err);
     } finally {
       setLoading(false);
     }
   }
 
-  function clearOfferState(fromCat, toCat) {
+  function clearOfferState() {
     setPage(1);
     setItems([]);
     setHasNextPage(true);
-    setError();
+    setError(undefined);
     setLoading(false);
   }
 

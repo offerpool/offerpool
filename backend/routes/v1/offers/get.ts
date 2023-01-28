@@ -4,6 +4,7 @@ import { pool } from "../../../utils/query-db.js";
 import { mapCatInfo } from "../../mappers/map-cat-info.js";
 import { mapNftInfo } from "../../mappers/map-nft-info.js";
 import { logger } from "../../../utils/logger.js";
+import { base58 } from "../../../utils/base-58.js";
 
 export const getOffersRoute = async (req: any, res: any) => {
   try {
@@ -12,21 +13,21 @@ export const getOffersRoute = async (req: any, res: any) => {
     const offered = req.query["offered"] || undefined;
     const requested = req.query["requested"] || undefined;
     const valid = req.query["valid"];
-  
+
     let offeredSearchParam = null;
     if (offered) {
       // see if they sent a cat code instead of a id
       const cat_info = await getCatInfo(offered);
       offeredSearchParam = cat_info.id;
     }
-  
+
     let requestedSearchParam = null;
     if (requested) {
       // see if they sent a cat code instead of a id
       const cat_info = await getCatInfo(requested);
       requestedSearchParam = cat_info.id;
     }
-  
+
     let statusSearchParam = null;
     // default to only show valid offers
     if (valid == "all") {
@@ -78,14 +79,14 @@ export const getOffersRoute = async (req: any, res: any) => {
       offers: offers,
     });
   } catch (error) {
-    logger.error({error, query: req.query}, "Error getting offers")
+    logger.error({ error, query: req.query }, "Error getting offers");
     res.status(500).send();
   }
-  
 };
 
 const mapRowToOffer = async (row: any) => {
   return {
+    id: base58.encode(row.hash),
     offer: row.offer,
     summary: row.parsed_offer,
     active: row.status ? true : false,
@@ -93,7 +94,6 @@ const mapRowToOffer = async (row: any) => {
       offered: await mapCatInfo(row.parsed_offer.offered),
       requested: await mapCatInfo(row.parsed_offer.requested),
     },
-    nft_info: mapNftInfo(row.nft_info)
+    nft_info: mapNftInfo(row.nft_info),
   };
 };
-

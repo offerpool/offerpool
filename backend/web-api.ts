@@ -14,10 +14,9 @@ import { liveRoute } from "./routes/diagnostics/live.js";
 import { readyRoute } from "./routes/diagnostics/ready.js";
 import { getOffersForCollectionRoute } from "./routes/v1/offers/nft/collection/get.js";
 import compression from "compression";
-import cors from 'cors';
+import cors from "cors";
 import { getOfferByHash } from "./routes/v1/offers/[id]/get.js";
-
-
+import { downloadOffer } from "./routes/v1/offers/[id]/download-offer.js";
 
 if (process.env.MAX_EVENT_LISTENERS) {
   require("events").EventEmitter.defaultMaxListeners = parseInt(
@@ -29,14 +28,15 @@ let db: any = undefined;
 
 const startServer = () => {
   const app = express();
-  const port = 3000;
+  const port = parseInt(process.env.PORT || "3000");
 
-  app.use(express.json({limit: "500kb"}));
+  app.use(express.json({ limit: "500kb" }));
   app.use(boolParser());
   app.use(pinoHttp.default({ customLogLevel: customLogLevel }));
   app.use(compression());
 
   app.get("/api/v1/offers", getOffersRoute);
+  app.get("/api/v1/offers/:id.offer", cors(), downloadOffer);
   app.get("/api/v1/offers/:id", cors(), getOfferByHash);
 
   app.get("/api/v1/offers/nft/collection", cors(), getOffersForCollectionRoute);
@@ -51,7 +51,7 @@ const startServer = () => {
 
   app.use(express.static("../client/build"));
 
-  app.listen(process.env.port || 3000, () => {
+  app.listen(port, () => {
     logger.info(`Listening at http://localhost:${port}`);
   });
 };

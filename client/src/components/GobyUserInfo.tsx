@@ -1,15 +1,15 @@
 import { bech32m } from "bech32";
 import { ThemeContext } from "../contexts/ThemeContext";
-import { Buffer } from "buffer"
+import { Buffer } from "buffer";
 
-export function toChainAddress(address) {
+export function toChainAddress(address: string | Buffer) {
   if (!Buffer.isBuffer(address)) {
-    address = Buffer.from(address, 'hex');
+    address = Buffer.from(address, "hex");
   }
-  return bech32m.encode('xch', bech32m.toWords(address));
+  return bech32m.encode("xch", bech32m.toWords(address));
 }
 
-const GobyUserInfo = ({ account }) => { 
+const GobyUserInfo = ({ account }: any) => {
   const chainAddress = toChainAddress(account);
 
   return (

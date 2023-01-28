@@ -1,26 +1,32 @@
 .copy-button,
 .goby-button,
 .download-button {
-    background-color: transparent;
-    border: 1px solid transparent; 
-    padding: 0.375rem;
-    border-radius: 0.25rem;
-    color: #6c757d;
+  background-color: transparent;
+  border: 1px solid transparent;
+  padding: 0.375rem;
+  border-radius: 0.25rem;
+  color: #6c757d;
 }
 
 .connect-goby-button {
-    background-color: transparent;
-    border: 1px solid transparent; 
-    color: #6c757d;
+  background-color: transparent;
+  border: 1px solid transparent;
+  color: #6c757d;
+}
+
+.header-link,
+.header-link:hover {
+  color: #000;
+  text-decoration: none;
 }
 
 body.dark-mode-content {
-    background: #222;
-    color: #ddd;
+  background: #222;
+  color: #ddd;
 }
 
 body.dark-mode-content .text-dark {
-    color: #ddd !important;
+  color: #ddd !important;
 }
 
 body.dark-mode-content .card,
@@ -28,25 +34,24 @@ body.dark-mode-content .modal-content,
 body.dark-mode-content .cat-selector__single-value,
 body.dark-mode-content .cat-selector__control,
 body.dark-mode-content .cat-selector__menu {
-    background: #303030;
-    color: #ddd;
+  background: #303030;
+  color: #ddd;
 }
 
 body.dark-mode-content .cat-selector__input-container {
-    color: #ddd;
+  color: #ddd;
 }
 
 body.dark-mode-content .copy-button,
 body.dark-mode-content .link-secondary,
 body.dark-mode-content .btn-link,
 body.dark-mode-content a,
-body.dark-mode-content .cat-selector__dropdown-indicator
-{
-    color: #ddd;
+body.dark-mode-content .cat-selector__dropdown-indicator,
+body.dark-mode-content .header-link,
+body.dark-mode-content .header-link:hover {
+  color: #ddd;
 }
-
 
 body.dark-mode-content .cat-selector__option--is-focused {
-    background: #404040 !important;
+  background: #404040 !important;
 }
-

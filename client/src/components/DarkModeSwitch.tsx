@@ -1,6 +1,6 @@
 // Deep copy of https://github.com/JoseRFelix/react-toggle-dark-mode
-import * as React from 'react';
-import { useSpring, animated } from 'react-spring';
+import * as React from "react";
+import { useSpring, animated } from "react-spring";
 
 export const defaultProperties = {
   dark: {
@@ -8,11 +8,11 @@ export const defaultProperties = {
       r: 9,
     },
     mask: {
-      cx: '50%',
-      cy: '23%',
+      cx: "50%",
+      cy: "23%",
     },
     svg: {
-      transform: 'rotate(40deg)',
+      transform: "rotate(40deg)",
     },
     lines: {
       opacity: 0,
@@ -23,11 +23,11 @@ export const defaultProperties = {
       r: 5,
     },
     mask: {
-      cx: '100%',
-      cy: '0%',
+      cx: "100%",
+      cy: "0%",
     },
     svg: {
-      transform: 'rotate(90deg)',
+      transform: "rotate(90deg)",
     },
     lines: {
       opacity: 1,
@@ -44,11 +44,11 @@ export const DarkModeSwitch = ({
   checked = false,
   size = 24,
   animationProperties = defaultProperties,
-  moonColor = 'white',
-  sunColor = 'black',
+  moonColor = "white",
+  sunColor = "black",
   style,
   ...rest
-}) => {
+}: any) => {
   const [id, setId] = React.useState(0);
 
   React.useEffect(() => {
@@ -64,7 +64,7 @@ export const DarkModeSwitch = ({
     return animationProperties;
   }, [animationProperties]);
 
-  const { circle, svg, lines, mask } = properties[checked ? 'dark' : 'light'];
+  const { circle, svg, lines, mask } = properties[checked ? "dark" : "light"];
 
   const svgContainerProps = useSpring({
     ...svg,
@@ -101,7 +101,7 @@ export const DarkModeSwitch = ({
       stroke="currentColor"
       onClick={toggle}
       style={{
-        cursor: 'pointer',
+        cursor: "pointer",
         ...svgContainerProps,
         ...style,
       }}

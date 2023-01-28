@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Select from "react-select";
 import { Modal } from "react-bootstrap";
@@ -10,6 +10,7 @@ import {
   faExchangeAlt,
   faFileDownload,
   faCopy,
+  faInfo,
 } from "@fortawesome/free-solid-svg-icons";
 import { useLoadOffers } from "./hooks/useLoadOffers";
 import useInfiniteScroll from "react-infinite-scroll-hook";
@@ -20,19 +21,26 @@ import { Trans, t } from "@lingui/macro";
 import { ThemeContext } from "./contexts/ThemeContext";
 import { GobyContext } from "./contexts/GobyContext";
 import { TakeOfferInGoby } from "./components/TakeOfferInGoby";
+import { CatInfo } from "./hooks/CatInfo";
 
-fontawesome.library.add(faSpinner, faExchangeAlt, faFileDownload, faCopy);
+fontawesome.library.add(
+  faSpinner as any,
+  faExchangeAlt as any,
+  faFileDownload as any,
+  faCopy as any,
+  faInfo as any
+);
 
 function OfferList() {
   // Get the cats available
   const [offersLoaded, setOffersLoaded] = useState(false);
   const [catsLoaded, setCatsLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [catData, setCatData] = useState();
-  const [fromCat, setFromCat] = useState();
-  const [toCat, setToCat] = useState();
+  const [catData, setCatData] = useState<any>();
+  const [fromCat, setFromCat] = useState<CatInfo>();
+  const [toCat, setToCat] = useState<CatInfo>();
   const [isUploadResultOpen, setIsUploadResultOpen] = useState(false);
-  const [uploadResults, setUploadResults] = useState();
+  const [uploadResults, setUploadResults] = useState<any>();
   const navigate = useNavigate();
 
   const {
@@ -43,6 +51,7 @@ function OfferList() {
     loadMoreOffers,
     clearOfferState,
   } = useLoadOffers(fromCat, toCat);
+
   const {
     loadingInverseOffers,
     inverseOffers,
@@ -125,8 +134,8 @@ function OfferList() {
     setOffersLoaded(offers && inverseOffers);
   }, [offers, inverseOffers]);
 
-  const onchangeSelectFrom = (item) => {
-    let newFromCat = { id: "any" };
+  const onchangeSelectFrom = (item: any) => {
+    let newFromCat: CatInfo = { id: "any", mojos_per_coin: NaN };
     if (item.value !== "any") {
       newFromCat = catData[item.value];
     }
@@ -136,8 +145,8 @@ function OfferList() {
     setCatsInHistory(newFromCat, toCat);
   };
 
-  const onchangeSelectTo = (item) => {
-    let newToCat = { id: "any" };
+  const onchangeSelectTo = (item: any) => {
+    let newToCat = { id: "any", mojos_per_coin: NaN };
     if (item.value !== "any") {
       newToCat = catData[item.value];
     }
@@ -157,23 +166,30 @@ function OfferList() {
     setCatsInHistory(tempFromCat, tempToCat);
   };
 
-  const setCatsInHistory = (fromCat, toCat) => {
+  const setCatsInHistory = (
+    fromCat: CatInfo | undefined,
+    toCat: CatInfo | undefined
+  ) => {
     // If they are both any, save that
-    const fromCatString = (fromCat.cat_code ?? fromCat.id ?? "").toLowerCase();
-    const toCatString = (toCat.cat_code ?? toCat.id ?? "").toLowerCase();
+    const fromCatString = (
+      fromCat?.cat_code ??
+      fromCat?.id ??
+      ""
+    ).toLowerCase();
+    const toCatString = (toCat?.cat_code ?? toCat?.id ?? "").toLowerCase();
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const language = urlParams.get("lang");
     let langParam = language ? `&lang=${language}` : "";
 
-    if (fromCat.id === "any" && toCat.id === "any") {
+    if (fromCat?.id === "any" && toCat?.id === "any") {
       navigate(`/?from=${fromCatString}&to=${toCatString}${langParam}`, {
         replace: true,
       });
-    } else if (fromCat.id === "any") {
+    } else if (fromCat?.id === "any") {
       // If one is any, don't include it
       navigate(`/?to=${toCatString}${langParam}`, { replace: true });
-    } else if (toCat.id === "any") {
+    } else if (toCat?.id === "any") {
       navigate(`/?from=${fromCatString}${langParam}`, { replace: true });
     } else {
       // Include both if neither are any
@@ -183,7 +199,7 @@ function OfferList() {
     }
   };
 
-  function readFile(file) {
+  function readFile(file: Blob) {
     return new Promise((resolve, reject) => {
       var fr = new FileReader();
       fr.onload = () => {
@@ -194,7 +210,7 @@ function OfferList() {
     });
   }
 
-  const onDrop = useCallback(async (files) => {
+  const onDrop = useCallback(async (files: Blob[]) => {
     // loop through the files and make sure they are valid offers, upload them to the api, an then list the results per filename
     const readPromises = [];
     for (let i = 0; i < files.length; i++) {
@@ -204,7 +220,7 @@ function OfferList() {
     const readResults = await Promise.all(readPromises);
     const results = [];
     for (let i = 0; i < readResults.length; i++) {
-      const offer = readResults[i];
+      const offer = readResults[i] as string;
       if (!offer.startsWith("offer")) {
         results.push(t`Error adding offer, Invalid offer file`);
         continue;
@@ -212,7 +228,7 @@ function OfferList() {
       try {
         await axios.post("/api/v1/offers", { offer });
         results.push(t`Success`);
-      } catch (err) {
+      } catch (err: any) {
         if (err?.response?.data?.error_message) {
           results.push(
             `${t`Error adding offer`}: ${err?.response?.data?.error_message}`
@@ -258,10 +274,10 @@ function OfferList() {
       }
     });
     const fromValue = cats.find((c) => {
-      return c.value === fromCat.id;
+      return c.value === fromCat?.id;
     });
     const toValue = cats.find((c) => {
-      return c.value === toCat.id;
+      return c.value === toCat?.id;
     });
 
     return (
@@ -359,14 +375,14 @@ function OfferList() {
                   {/** Hide inverse offers if both are any */}
                   <div className="pt-1 col-lg-6">
                     <span className="h4">
-                      {fromCat.id === "any" && toCat.id === "any" ? (
+                      {fromCat?.id === "any" && toCat?.id === "any" ? (
                         ""
                       ) : (
                         <Trans>Inverse Offers</Trans>
                       )}
                     </span>
                     <div>
-                      {inverseOffers?.map((offer) => {
+                      {inverseOffers?.map((offer: any) => {
                         return printInverseOffer(offer, catData, account);
                       })}
                     </div>
@@ -408,7 +424,7 @@ function OfferList() {
           </ThemeContext.Consumer>
           <Modal.Body>
             <div>
-              {uploadResults?.files?.map((f, i) => {
+              {uploadResults?.files?.map((f: any, i: any) => {
                 return (
                   <div className="card" key={f.path}>
                     <div className="card-body text-center">
@@ -426,13 +442,13 @@ function OfferList() {
   }
 }
 
-const getUnkownCatCode = (cat_id) => {
+const getUnkownCatCode = (cat_id: string) => {
   return `${t`Unknown`} ${cat_id.slice(0, 5)}...${cat_id.slice(
     cat_id.length - 5
   )}`;
 };
 
-const printOffer = (offer, catData, account) => {
+const printOffer = (offer: any, catData: any, account: any) => {
   const offered = [];
   const requested = [];
   for (const cat in offer.summary.offered) {
@@ -520,6 +536,13 @@ const printOffer = (offer, catData, account) => {
               >
                 <FontAwesomeIcon icon="file-download" />
               </a>
+              <Link
+                to={`/offers/${offer.id}`}
+                className="link-secondary download-button"
+                title={t`download offer file`}
+              >
+                <FontAwesomeIcon icon="info" />
+              </Link>
             </h4>
           </div>
         </div>
@@ -528,7 +551,7 @@ const printOffer = (offer, catData, account) => {
   );
 };
 
-const printInverseOffer = (offer, catData, account) => {
+const printInverseOffer = (offer: any, catData: any, account: any) => {
   const offered = [];
   const requested = [];
   for (const cat in offer.summary.offered) {
@@ -615,6 +638,13 @@ const printInverseOffer = (offer, catData, account) => {
               >
                 <FontAwesomeIcon icon="file-download" />
               </a>
+              <Link
+                to={`/offers/${offer.id}`}
+                className="link-secondary download-button"
+                title={t`download offer file`}
+              >
+                <FontAwesomeIcon icon="info" />
+              </Link>
             </h4>
           </div>
         </div>

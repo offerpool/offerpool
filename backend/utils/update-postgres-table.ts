@@ -1,6 +1,6 @@
 import { addOfferEntryToPGDB } from "./add-offer-to-pg.js";
 import { doesOfferExistInPG } from "./does-offer-exist-in-pg.js";
-import { logger } from "./logger.js"
+import { logger } from "./logger.js";
 
 let updateInProgress = false;
 let requestsForAdditionalUpdates = 0;
@@ -19,7 +19,7 @@ export const updatePostgresTable = async (db: any, starting: any) => {
   let offersWereFound = true;
   let lastSeenHash = undefined;
   while (
-    (dupesHit <= parseInt(process.env.DATABASE_UPDATE_DUPE_LIMIT ?? "100")) &&
+    dupesHit <= parseInt(process.env.DATABASE_UPDATE_DUPE_LIMIT ?? "100") &&
     offersWereFound
   ) {
     let results: any[] = db

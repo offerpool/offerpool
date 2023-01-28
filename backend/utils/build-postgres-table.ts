@@ -23,5 +23,4 @@ export const buildPostgresTable = async () => {
     console.log("Creating nft_info table...");
     result = await pool.query(create_nft_table(getTableName()));
   }
-  
 };

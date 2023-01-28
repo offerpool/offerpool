@@ -26,7 +26,7 @@ export const updateValidOffers = async () => {
   const batches = offers.rows.length / batch_size;
   let currentPosition = 0;
   for (let batch = 0; batch < batches; batch++) {
-    logger.info(`Updating offer batch ${batch} of ${batches}`)
+    logger.info(`Updating offer batch ${batch} of ${batches}`);
     let offerPromises = [];
     for (
       let i = 0;
@@ -59,6 +59,9 @@ const updateOffer = async (offer: string, id: string) => {
   }
   if (!offerStatus.valid) {
     logger.info(`Updating status of offer ${id}`);
-    await pool.query(`UPDATE "${getTableName()}" SET status = 0 WHERE id = $1`, [id]);
+    await pool.query(
+      `UPDATE "${getTableName()}" SET status = 0 WHERE id = $1`,
+      [id]
+    );
   }
 };

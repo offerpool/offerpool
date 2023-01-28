@@ -1,11 +1,14 @@
 import { ThemeContext } from "../contexts/ThemeContext";
 import { Button } from "react-bootstrap";
 
-export const ConnectGobyAccount = ({ handleConnect }) => {
+export const ConnectGobyAccount = ({ handleConnect }: any) => {
   return (
     <ThemeContext.Consumer>
       {({ theme }) => (
-        <Button onClick={handleConnect} className="connect-goby-button me-2 py-0">
+        <Button
+          onClick={handleConnect}
+          className="connect-goby-button me-2 py-0"
+        >
           <img
             src={
               theme === "dark-mode-content"
@@ -17,7 +20,7 @@ export const ConnectGobyAccount = ({ handleConnect }) => {
             alt="connect to goby wallet"
             className="align-top"
           />{" "}
-           Connect
+          Connect
         </Button>
       )}
     </ThemeContext.Consumer>

@@ -3,7 +3,9 @@ dotenv.config();
 
 import { logger } from "./utils/logger.js";
 
-const OFFER_CHECK_INTERVAL = parseInt(process.env.OFFER_CHECK_INTERVAL || "120"); // Update offers every 120 seconds by default
+const OFFER_CHECK_INTERVAL = parseInt(
+  process.env.OFFER_CHECK_INTERVAL || "120"
+); // Update offers every 120 seconds by default
 const NFT_CHECK_INTERVAL = parseInt(process.env.NFT_CHECK_INTERVAL || "187"); // Update offers every 180 seconds by default
 
 import { buildPostgresTable } from "./utils/build-postgres-table.js";
@@ -31,7 +33,7 @@ const start = async () => {
   updateValidOffers();
   updateUnsuccessfulNfts();
   setInterval(updateValidOffers, OFFER_CHECK_INTERVAL * 1000);
-  setInterval(updateUnsuccessfulNfts, NFT_CHECK_INTERVAL * 1000)
+  setInterval(updateUnsuccessfulNfts, NFT_CHECK_INTERVAL * 1000);
 };
 
 start();

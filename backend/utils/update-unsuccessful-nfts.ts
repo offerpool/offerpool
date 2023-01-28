@@ -1,4 +1,4 @@
-import { logger } from "./logger.js"
+import { logger } from "./logger.js";
 import { getNftCoinInfo } from "./get-offer-summary.js";
 import { pool } from "./query-db.js";
 import { getTableName } from "./get-table-name.js";
@@ -14,8 +14,8 @@ export const updateUnsuccessfulNfts = async () => {
     return;
   }
   updating = true;
-  const start = new Date()
-  logger.info("starting nft update")
+  const start = new Date();
+  logger.info("starting nft update");
   const nftLauncherIds = await pool.query(
     `select info_launchers.launcher_id launcher_id
     from (Select array_to_string(regexp_matches(parsed_offer ->> 'infos', '"launcher_id": "0x([0-9a-f]+)"', 'g'), ';') as "launcher_id", id
@@ -47,7 +47,7 @@ export const updateUnsuccessfulNfts = async () => {
       promises.push(updateNft(launcherId));
     }
     await Promise.all(promises);
-   }
+  }
 
   logger.info(
     `Updating info for ${nftLauncherIds.rows.length} nfts took ${
@@ -63,16 +63,19 @@ export const updateUnsuccessfulNfts = async () => {
 };
 
 const updateNft = async (launcherId: string) => {
-    const nfts = []
-    let nftCoinInfo = undefined;
-    try {
-        const nftCoinInfo = await getNftCoinInfo(launcherId);
-        nfts.push(getNftDTO(launcherId, nftCoinInfo));
-        if(nftCoinInfo.success) {
-            logger.info(`fixing up ${launcherId}`);
-        }
-        await saveNFTInfos(nfts)
-    } catch (error: any) {
-        logger.error({error: error?.message, nfts, nftCoinInfo}, "Error updating NFT")
+  const nfts = [];
+  let nftCoinInfo = undefined;
+  try {
+    const nftCoinInfo = await getNftCoinInfo(launcherId);
+    nfts.push(getNftDTO(launcherId, nftCoinInfo));
+    if (nftCoinInfo.success) {
+      logger.info(`fixing up ${launcherId}`);
     }
-} 
+    await saveNFTInfos(nfts);
+  } catch (error: any) {
+    logger.error(
+      { error: error?.message, nfts, nftCoinInfo },
+      "Error updating NFT"
+    );
+  }
+};

@@ -34,9 +34,8 @@ export const postOffersRoute = (db: any) => async (req: any, res: any) => {
     await addOfferEntryToPGDB(offer);
 
     res.json({ success: true });
-  } catch(e) {
+  } catch (e) {
     logger.error(e);
     res.json({ success: false, error_message: "unknown error" });
   }
 };
-

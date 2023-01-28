@@ -9,19 +9,23 @@ export const getOfferDB = async (orbitDirectoryPrefix: string = "") => {
     logger.info(`Connecting to Master Node: ${process.env.MASTER_MULTIADDR}`);
     await ipfs.swarm.connect(process.env.MASTER_MULTIADDR as any);
   }
-  let directory = `./orbitdb/${getTableName()}`
+  let directory = `./orbitdb/${getTableName()}`;
   if (orbitDirectoryPrefix) {
-    directory = `./orbitdb/${orbitDirectoryPrefix}-${getTableName()}`
+    directory = `./orbitdb/${orbitDirectoryPrefix}-${getTableName()}`;
   }
   const orbitClient = await orbitdb.createInstance(ipfs, {
     directory,
   });
-  const dbAddress = await orbitClient.determineAddress(getTableName(), "eventlog", {
-    accessController: {
-      write: ["*"],
-    },
-  });
+  const dbAddress = await orbitClient.determineAddress(
+    getTableName(),
+    "eventlog",
+    {
+      accessController: {
+        write: ["*"],
+      },
+    }
+  );
   logger.info({ dbAddress }, "orbit db table address set");
-  let database = await orbitClient.log(dbAddress);
+  let database = await orbitClient.log(dbAddress, { maxHistory: 1 });
   return database;
 };

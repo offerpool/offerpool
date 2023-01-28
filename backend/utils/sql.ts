@@ -73,8 +73,8 @@ create index "${table_name}_offered_cat_cat_id_index"
     on "${table_name}_offered_cat" (cat_id);
 `;
 
-export const create_nft_table = (table_name: string) => 
-`create table "${table_name}_nft_info"
+export const create_nft_table = (table_name: string) =>
+  `create table "${table_name}_nft_info"
 (
     launcher_id varchar
         constraint "${table_name}_nft_info_pk" primary key,
@@ -90,4 +90,4 @@ create index "${table_name}_nft_info_success_index"
 
 create index "${table_name}_nft_info_collection_did_index"
   on "${table_name}_nft_info" (collection_id, minter_did_id);
-`
+`;
