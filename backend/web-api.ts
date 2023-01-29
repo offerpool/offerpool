@@ -18,9 +18,10 @@ import compression from "compression";
 import cors from "cors";
 import { getOfferByHash } from "./routes/v1/offers/[id]/get.js";
 import { downloadOffer } from "./routes/v1/offers/[id]/download-offer.js";
+import { EventEmitter } from "events";
 
 if (process.env.MAX_EVENT_LISTENERS) {
-  require("events").EventEmitter.defaultMaxListeners = parseInt(
+  EventEmitter.defaultMaxListeners = parseInt(
     process.env.MAX_EVENT_LISTENERS
   );
 }
