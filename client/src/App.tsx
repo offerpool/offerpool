@@ -129,6 +129,9 @@ function App() {
           <Trans>github</Trans>
         </a>
         <div style={{ fontSize: "13px" }}>
+          
+          Sponsored by <a href="https://polyscriber.com">Polyscriber</a>
+          <br />
           Send Coffee{" "}
           <span
             style={{
