@@ -1,5 +1,5 @@
-export {}
+export {};
 
 declare global {
-  var chia: any
+  var chia: any;
 }
