@@ -10,13 +10,11 @@ export default function GobyContextWrapper(props: any) {
   const [account, setAccount] = useState("");
   useEffect(() => {
     if (isGobyInstalled()) {
-      (window as any).chia
-        .on("accountsChanged", (accounts: any) => {
+      window.chia.on("accountsChanged", (accounts: any) => {
           setAccount(accounts?.[0]);
-        })(window as any)
-        .chia.on("chainChanged", () => window.location.reload());
-      (window as any).chia
-        .request({ method: "accounts" })
+        });
+      window.chia.on("chainChanged", () => window.location.reload());
+      window.chia.request({ method: "accounts" })
         .then((accounts: any) => {
           setAccount(accounts?.[0]);
         });

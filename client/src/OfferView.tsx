@@ -145,6 +145,31 @@ function OfferView() {
           </div>
           <div>
             <div style={headerStyle}>Offer</div>
+            <div className="card-body pt-0">
+            <h4>
+            <GobyContext.Consumer>
+            {({ account }) => (
+              <TakeOfferInGoby account={account} offer={offerData} />
+            )}
+            </GobyContext.Consumer>
+              <CopyToClipboard text={offerData.offer}>
+                <button
+                  className="copy-button btn-link-secondary"
+                  title={t`copy offer to clipboard`}
+                >
+                  <FontAwesomeIcon icon="copy" />
+                </button>
+              </CopyToClipboard>
+              <a
+                href={`data:text/plain,${offerData.offer}`}
+                download={`${id}.offer`}
+                className="link-secondary download-button"
+                title={t`download offer file`}
+              >
+                <FontAwesomeIcon icon="file-download" />
+              </a>
+            </h4>
+          </div>
             <div
               style={{
                 fontSize: "8px",

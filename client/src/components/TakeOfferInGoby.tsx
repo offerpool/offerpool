@@ -13,7 +13,7 @@ export const TakeOfferInGoby = ({ offer, account }: any) => {
 
   async function takeOffer() {
     try {
-      await (window as any).chia.request({
+      await window.chia.request({
         method: "takeOffer",
         params: { offer: offer.offer, fee: 0 },
       });

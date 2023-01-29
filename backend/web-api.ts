@@ -12,6 +12,7 @@ import { getCatsRoute } from "./routes/v1/cats/get.js";
 import { customLogLevel } from "./utils/http-request-log-level.js";
 import { liveRoute } from "./routes/diagnostics/live.js";
 import { readyRoute } from "./routes/diagnostics/ready.js";
+import { nodeRoute } from "./routes/diagnostics/node.js";
 import { getOffersForCollectionRoute } from "./routes/v1/offers/nft/collection/get.js";
 import compression from "compression";
 import cors from "cors";
@@ -48,6 +49,8 @@ const startServer = () => {
   app.get("/diagnostics/live", liveRoute);
 
   app.get("/diagnostics/ready", readyRoute);
+
+  app.get("/diagnostics/node", nodeRoute);
 
   app.use(express.static("../client/build"));
 
