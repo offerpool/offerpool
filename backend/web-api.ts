@@ -19,6 +19,7 @@ import cors from "cors";
 import { getOfferByHash } from "./routes/v1/offers/[id]/get.js";
 import { downloadOffer } from "./routes/v1/offers/[id]/download-offer.js";
 import { EventEmitter } from "events";
+import {join} from "path";
 
 if (process.env.MAX_EVENT_LISTENERS) {
   EventEmitter.defaultMaxListeners = parseInt(
@@ -54,6 +55,11 @@ const startServer = () => {
   app.get("/diagnostics/node", nodeRoute);
 
   app.use(express.static("../client/build"));
+
+  // Handles any requests that don't match the ones above
+  app.get('*', (_, res) =>{
+    res.sendFile(join(__dirname+'/client/build/index.html'));
+  });
 
   app.listen(port, () => {
     logger.info(`Listening at http://localhost:${port}`);
