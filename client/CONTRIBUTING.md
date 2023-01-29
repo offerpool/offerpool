@@ -5,6 +5,7 @@ Thank you for considering contributing to offerpool. Prior to submitting a PR, c
 # Translation
 
 To contribute a new translation check out the repository:
+
 1. `cd` to `./client`
 1. Run `npm install`
 1. In `.linguirc` add your locale to the local array
