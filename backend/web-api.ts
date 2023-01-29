@@ -19,12 +19,18 @@ import cors from "cors";
 import { getOfferByHash } from "./routes/v1/offers/[id]/get.js";
 import { downloadOffer } from "./routes/v1/offers/[id]/download-offer.js";
 import { EventEmitter } from "events";
+import { join } from "path";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
 
 if (process.env.MAX_EVENT_LISTENERS) {
   EventEmitter.defaultMaxListeners = parseInt(process.env.MAX_EVENT_LISTENERS);
 }
 
 let db: any = undefined;
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const startServer = () => {
   const app = express();
@@ -55,7 +61,7 @@ const startServer = () => {
 
   // Handles any requests that don't match the ones above
   app.get("*", (_, res) => {
-    res.sendFile("../client/build/index.html");
+    res.sendFile(join(__dirname, "../client/build/index.html"));
   });
 
   app.listen(port, () => {
