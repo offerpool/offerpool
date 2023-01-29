@@ -7,11 +7,10 @@ import { buildPostgresTable } from "./utils/build-postgres-table.js";
 import { updatePostgresTable } from "./utils/update-postgres-table.js";
 import { getOfferDB } from "./utils/get-offer-db.js";
 import { attachDbReplicateEvents } from "./utils/attach-db-replicate-events.js";
+import { EventEmitter } from "events";
 
 if (process.env.MAX_EVENT_LISTENERS) {
-  require("events").EventEmitter.defaultMaxListeners = parseInt(
-    process.env.MAX_EVENT_LISTENERS
-  );
+  EventEmitter.defaultMaxListeners = parseInt(process.env.MAX_EVENT_LISTENERS);
 }
 
 let db = undefined;

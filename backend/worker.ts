@@ -9,11 +9,10 @@ const NFT_CHECK_INTERVAL = parseInt(process.env.NFT_CHECK_INTERVAL || "187"); //
 import { buildPostgresTable } from "./utils/build-postgres-table.js";
 import { updateValidOffers } from "./utils/update-valid-offers.js";
 import { updateUnsuccessfulNfts } from "./utils/update-unsuccessful-nfts.js";
+import { EventEmitter } from "events";
 
 if (process.env.MAX_EVENT_LISTENERS) {
-  require("events").EventEmitter.defaultMaxListeners = parseInt(
-    process.env.MAX_EVENT_LISTENERS
-  );
+  EventEmitter.defaultMaxListeners = parseInt(process.env.MAX_EVENT_LISTENERS);
 }
 
 const start = async () => {
