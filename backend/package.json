@@ -33,6 +33,7 @@
     "build": "npx tsc",
     "start": "node -r dotenv/config ./build/web-api.js",
     "start-worker": "node -r dotenv/config ./build/worker.js",
+    "start-worker-sync": "node -r dotenv/config ./build/worker-sync.js",
     "fmt": "npx prettier -w ."
   }
 }

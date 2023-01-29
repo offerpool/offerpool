@@ -13,7 +13,8 @@ In addition to the orbitdb offer table, offers are stored locally in a postgres 
 1. In `./backend` run `docker compose -p offerpool up -d` to start the database and ipfs daemon
 1. In `./backend` copy `env.example` to `.env` and change the `CHIA_SSL_DIR` variable to be the full path of your wallet rpc ssl certs directory
 1. In `./backend` run `npm run build` to compile the TypeScript to Javascript
-1. In `./backend` run `npm run start-worker` to start the backend worker process, offers will start to sync to ipfs, initial sync could take 30+ minutes
+1. In `./backend` run `npm run start-worker` to start the backend worker process, this will keep offers up to date
+1. In `./backend` run `npm run start-worker-sync` to start the backend worker process that syncs offers from orbitdb, initial sync could take 30+ minutes
 1. In `./backend` run `npm run start` and go to `http://localhost:3000`
 
 ## API
