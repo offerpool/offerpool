@@ -34,7 +34,7 @@ function App() {
 
   return (
     <div className="col-lg-9 mx-auto p-3 pb-md-5">
-      <header className="align-items-center pb-3 mb-2 border-bottom text-dark text-decoration-none container">
+      <header className="align-items-center mb-2 border-bottom text-dark text-decoration-none container">
         <div className="row justify-content-end">
           <div className="col-6 text-end">
             <GobyContext.Consumer>
@@ -70,7 +70,7 @@ function App() {
           <div className="col-8">
             <h2>
               <a href="/" className="header-link">
-                offerpool.io
+                <img src="/images/logo.svg" alt="offerpool logo" width={300} height={60}/>
               </a>
             </h2>
           </div>
@@ -94,7 +94,7 @@ function App() {
           {({ theme }) => (
             <Modal.Header
               closeButton
-              closeVariant={theme === "dark-mode-content" ? "white" : ""}
+              closeVariant={theme === "dark-mode-content" ? "white" : undefined}
             >
               <Modal.Title>
                 <Trans>About offerpool.io</Trans>

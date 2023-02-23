@@ -1,17 +1,16 @@
-# offerpool
+![offerpool](/client/public//images//logo.svg) 
 
-A decentralized database of chia offers with a bare bones UI and API.
+A decentralized database of chia offers with a bare-bones UI and API.
 
 Anyone can run an instance of offerpool and offers will sync across all instances within seconds via ipfs pub-sub.
 
-In addition to the orbitdb offer table, offers are stored locally in a postgres table with the details of the offer as well as the offer's current status which is maintained by a background job.
+In addition to the orbitdb offer table, offers are stored in a local database with the details of the offer as well as the offer's current status. The offer's status is maintained by a background job.
 
 ## Running locally
-1. Install Node v16, Python3, and Chia v1.4+
-1. Install and start the [offer helper](https://github.com/offerpool/offer-helper) python service
+1. Install Node v18, Python3, and Chia v1.7+
 1. In `./client` run `npm install && npm run build` to build the front end
-1. In `./backend` run `docker compose -p offerpool up -d` to start the database and ipfs daemon
-1. In `./backend` copy `env.example` to `.env` and change the `CHIA_SSL_DIR` variable to be the full path of your wallet rpc ssl certs directory
+1. In `./backend` run `docker compose -p offerpool up -d` to start the ipfs daemon
+1. In `./backend` copy `env.example` to `.env` and fill in the values
 1. In `./backend` run `npm run build` to compile the TypeScript to Javascript
 1. In `./backend` run `npm run start-worker` to start the backend worker process, this will keep offers up to date
 1. In `./backend` run `npm run start-worker-sync` to start the backend worker process that syncs offers from orbitdb, initial sync could take 30+ minutes

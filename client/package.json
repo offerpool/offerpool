@@ -43,7 +43,7 @@
     "compile": "lingui compile",
     "fmt": "npx prettier -w ."
   },
-  "proxy": "http://localhost:3005",
+  "proxy": "http://localhost:3000",
   "eslintConfig": {
     "extends": [
       "react-app",

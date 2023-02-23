@@ -1,13 +1,14 @@
 import { useState } from "react";
 import axios from "axios";
 import { CatInfo } from "./CatInfo";
+import type { ResultType } from "../../../backend/src/routes/v1/offers/types.js"
 
 export function useLoadInverseOffers(
   fromCat: CatInfo | undefined,
   toCat: CatInfo | undefined
 ) {
   const [loading, setLoading] = useState(false);
-  const [items, setItems] = useState<any>([]);
+  const [items, setItems] = useState<(ResultType & {price?: number})[]>([]);
   const [hasNextPage, setHasNextPage] = useState(!fromCat || !toCat);
   const [error, setError] = useState();
   const [page, setPage] = useState(1);
@@ -46,13 +47,14 @@ export function useLoadInverseOffers(
         params.offered = toCat.id;
       }
       const result = await axios.get(`/api/v1/offers`, { params });
-      for (let i = 0; i < result.data.offers.length; i++) {
-        const inverseOffer = result.data.offers[i];
+      const offers = result.data.offers as ResultType[];
+      for (let i = 0; i < offers.length; i++) {
+        const inverseOffer: ResultType & {price?: number} = offers[i];
         if (fromCat.id !== "any" && toCat.id !== "any") {
           inverseOffer.price =
-            inverseOffer.summary.requested[fromCat.id] /
+            (inverseOffer.info.requested.find(c => c.component_id === fromCat.id)?.amount ?? 0) /
             fromCat.mojos_per_coin /
-            (inverseOffer.summary.offered[toCat.id] / toCat.mojos_per_coin);
+            ((inverseOffer.info.offered.find(c => c.component_id === toCat.id)?.amount ?? 0) / toCat.mojos_per_coin);
         } else {
           inverseOffer.price = undefined;
         }
@@ -68,7 +70,7 @@ export function useLoadInverseOffers(
     }
     if (fromCat.id !== "any" && toCat.id !== "any") {
       tempInverseOffers.sort((a, b) => {
-        return a.price - b.price;
+        return (a.price ?? 0) - (b.price ?? 0);
       });
     }
 
@@ -86,6 +88,7 @@ export function useLoadInverseOffers(
       setItems((current: any[]) => [...current, ...data]);
       setHasNextPage(newHasNextPage);
     } catch (err: any) {
+      console.log(err);
       setError(err);
     } finally {
       setLoading(false);

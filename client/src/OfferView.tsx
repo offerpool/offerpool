@@ -11,9 +11,11 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { Trans, t } from "@lingui/macro";
-import { ThemeContext } from "./contexts/ThemeContext";
 import { GobyContext } from "./contexts/GobyContext";
 import { TakeOfferInGoby } from "./components/TakeOfferInGoby";
+import { toBech32m } from "./utils/bech32";
+
+import type { ResultType } from "../../backend/src/routes/v1/offers/[id]/types.js";
 
 fontawesome.library.add(
   faSpinner as any,
@@ -22,65 +24,9 @@ fontawesome.library.add(
   faCopy as any
 );
 
-export interface OfferInfo {
-  offer: string;
-  active: boolean;
-  summary_with_cat_info: SummaryWithCatInfo;
-  nft_info: NftInfo[];
-}
-
-export interface SummaryWithCatInfo {
-  offered: ReqInfo[];
-  requested: ReqInfo[];
-}
-
-export interface ReqInfo {
-  cat_id: string;
-  cat_code: string;
-  cat_name: string;
-  mojos_per_coin: number;
-  amount: number;
-  nft?: {
-    nft_launcher_id: string;
-    nft_info: NFTInfoParsed;
-    nft_id: string;
-  };
-}
-
-export interface NftInfo {
-  nft_launcher_id: string;
-  nft_info: string;
-  nft_id: string;
-}
-
-export interface NFTInfoParsed {
-  chain_info: string;
-  data_hash: string;
-  data_uris: string[];
-  edition_number: number;
-  edition_total: number;
-  launcher_id: string;
-  launcher_puzhash: string;
-  license_hash: string;
-  license_uris: string[];
-  metadata_hash: string;
-  metadata_uris: string[];
-  mint_height: number;
-  minter_did: string;
-  nft_coin_id: string;
-  off_chain_metadata: any;
-  owner_did: any;
-  p2_address: string;
-  pending_transaction: boolean;
-  royalty_percentage: number;
-  royalty_puzzle_hash: string;
-  supports_did: boolean;
-  updater_puzhash: string;
-}
-
 function OfferView() {
   const [loading, setLoading] = useState(false);
-  const [offerData, setOfferData] = useState<OfferInfo>();
+  const [offerData, setOfferData] = useState<ResultType>();
   const [error, setError] = useState<any>();
   const { id } = useParams();
 
@@ -96,7 +42,7 @@ function OfferView() {
           setError(err);
         });
     }
-  }, [loading, offerData]);
+  }, [loading, offerData, id]);
 
   if (!offerData && !error) {
     return (
@@ -128,19 +74,13 @@ function OfferView() {
           <div>
             <div style={headerStyle}>Requesting</div>
             <div>
-              {populateInNFTInfo(
-                offerData.summary_with_cat_info.requested,
-                offerData.nft_info
-              ).map((tradeItem) => TradeItem(tradeItem))}
+              {offerData.info.requested.map((tradeItem) => TradeItem(tradeItem))}
             </div>
           </div>
           <div>
             <div style={headerStyle}>Offering</div>
             <div>
-              {populateInNFTInfo(
-                offerData.summary_with_cat_info.offered,
-                offerData.nft_info
-              ).map((tradeItem) => TradeItem(tradeItem))}
+              {offerData.info.offered.map((tradeItem) => TradeItem(tradeItem))}
             </div>
           </div>
           <div>
@@ -188,50 +128,41 @@ function OfferView() {
   }
 }
 
-function TradeItem(tradeItem: ReqInfo) {
-  if (tradeItem.nft) {
+function TradeItem(tradeItem: ResultType["info"]["offered"][0]) {
+  if (tradeItem.component_type === "nft") {
     return NFT(tradeItem);
   }
   const amount = tradeItem.amount / (tradeItem.mojos_per_coin || 1000);
-  const code = tradeItem?.cat_code || getUnkownCatCode(tradeItem.cat_id);
+  const code = tradeItem?.cat_code || getUnkownCatCode(tradeItem.component_id);
   return (
-    <div>
+    <div key={tradeItem.component_id}>
       {amount} {code}
     </div>
   );
 }
 
-function NFT(tradeItem: ReqInfo) {
-  if (!tradeItem.nft) {
+function NFT(tradeItem: ResultType["info"]["offered"][0]) {
+  if (tradeItem.component_type !== "nft") {
     return <></>;
   }
+  let nftId = tradeItem?.nft_info?.launcher_id;
+  if(tradeItem?.nft_info?.launcher_id) {
+    nftId = toBech32m(tradeItem.nft_info.launcher_id, "nft");
+  }
   return (
-    <div>
+    <div key={tradeItem.component_id}>
       <div>
-        <a href={`https://www.spacescan.io/nft/${tradeItem.nft.nft_id}`}>
-          {tradeItem.nft.nft_id}
+        <a href={`https://www.spacescan.io/nft/${nftId}`}>
+          {nftId}
         </a>
       </div>
       <img
-        src={tradeItem.nft.nft_info.data_uris[0]}
+        src={tradeItem?.nft_info?.data_uris?.[0]}
+        alt="NFT"
         style={{ maxWidth: "400px", maxHeight: "400px" }}
       ></img>
     </div>
   );
-}
-
-function populateInNFTInfo(reqInfos: ReqInfo[], nftInfos: NftInfo[]) {
-  for (const info of reqInfos) {
-    const nft = nftInfos.find((nft) => nft.nft_launcher_id === info.cat_id);
-    if (nft) {
-      info.nft = {
-        nft_info: JSON.parse(nft.nft_info),
-        nft_launcher_id: nft.nft_launcher_id,
-        nft_id: nft.nft_id,
-      };
-    }
-  }
-  return reqInfos;
 }
 
 const getUnkownCatCode = (cat_id: string) => {

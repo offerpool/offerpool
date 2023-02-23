@@ -22,6 +22,7 @@ import { ThemeContext } from "./contexts/ThemeContext";
 import { GobyContext } from "./contexts/GobyContext";
 import { TakeOfferInGoby } from "./components/TakeOfferInGoby";
 import { CatInfo } from "./hooks/CatInfo";
+import type { ResultType } from "../../backend/src/routes/v1/offers/types.js"
 
 fontawesome.library.add(
   faSpinner as any,
@@ -131,7 +132,7 @@ function OfferList() {
   }, [loading, catData]);
 
   useEffect(() => {
-    setOffersLoaded(offers && inverseOffers);
+    setOffersLoaded(offers !== undefined && inverseOffers !== undefined);
   }, [offers, inverseOffers]);
 
   const onchangeSelectFrom = (item: any) => {
@@ -357,7 +358,7 @@ function OfferList() {
                     </span>
                     <div>
                       {offers?.map((offer) => {
-                        return printOffer(offer, catData, account);
+                        return printOffer(offer, account);
                       })}
                     </div>
                     {loadingOffers && (
@@ -383,7 +384,7 @@ function OfferList() {
                     </span>
                     <div>
                       {inverseOffers?.map((offer: any) => {
-                        return printInverseOffer(offer, catData, account);
+                        return printInverseOffer(offer, account);
                       })}
                     </div>
                     {loadingInverseOffers && (
@@ -414,7 +415,7 @@ function OfferList() {
             {({ theme }) => (
               <Modal.Header
                 closeButton
-                closeVariant={theme === "dark-mode-content" ? "white" : ""}
+                closeVariant={theme === "dark-mode-content" ? "white" : undefined}
               >
                 <Modal.Title>
                   <Trans>Upload Results</Trans>
@@ -442,27 +443,26 @@ function OfferList() {
   }
 }
 
-const getUnkownCatCode = (cat_id: string) => {
+const getUnknownCatCode = (cat_id: string) => {
   return `${t`Unknown`} ${cat_id.slice(0, 5)}...${cat_id.slice(
     cat_id.length - 5
   )}`;
 };
 
-const printOffer = (offer: any, catData: any, account: any) => {
+const printOffer = (offer: ResultType & {price?: number}, account: any) => {
   const offered = [];
   const requested = [];
-  for (const cat in offer.summary.offered) {
+  for (const cat of offer.info.offered) {
     offered.push({
       amount:
-        offer.summary.offered[cat] / (catData[cat]?.mojos_per_coin || 1000),
-      code: catData[cat]?.cat_code || getUnkownCatCode(cat),
+        cat.amount / (cat?.mojos_per_coin || 1000),
+      code: cat.cat_code || getUnknownCatCode(cat.component_id),
     });
   }
-  for (const cat in offer.summary.requested) {
+  for (const cat of offer.info.requested) {
     requested.push({
-      amount:
-        offer.summary.requested[cat] / (catData[cat]?.mojos_per_coin || 1000),
-      code: catData[cat]?.cat_code || getUnkownCatCode(cat),
+      amount: cat.amount / (cat?.mojos_per_coin || 1000),
+      code: cat.cat_code || getUnknownCatCode(cat.component_id),
     });
   }
 
@@ -551,21 +551,20 @@ const printOffer = (offer: any, catData: any, account: any) => {
   );
 };
 
-const printInverseOffer = (offer: any, catData: any, account: any) => {
+const printInverseOffer = (offer: ResultType & {price?: number}, account: any) => {
   const offered = [];
   const requested = [];
-  for (const cat in offer.summary.offered) {
+  for (const cat of offer.info.offered) {
     offered.push({
-      amount:
-        offer.summary.offered[cat] / (catData[cat]?.mojos_per_coin || 1000),
-      code: catData[cat]?.cat_code || getUnkownCatCode(cat),
+      amount: cat.amount / (cat?.mojos_per_coin || 1000),
+      code: cat?.cat_code || getUnknownCatCode(cat.component_id),
     });
   }
-  for (const cat in offer.summary.requested) {
+  for (const cat of offer.info.requested) {
     requested.push({
       amount:
-        offer.summary.requested[cat] / (catData[cat]?.mojos_per_coin || 1000),
-      code: catData[cat]?.cat_code || getUnkownCatCode(cat),
+        cat.amount / (cat?.mojos_per_coin || 1000),
+      code: cat?.cat_code || getUnknownCatCode(cat.component_id),
     });
   }
   return (

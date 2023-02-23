@@ -1,0 +1,53 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model Offer {
+  id           Bytes            @id
+  offer        String
+  status       Int
+  found_at     DateTime         @default(now())
+  updated_at   DateTime         @updatedAt
+  info         String
+  info_version Int
+  components   OfferComponent[]
+}
+
+model CatInfo {
+  id             String           @id
+  name           String
+  code           String
+  mojos_per_coin String
+  components     OfferComponent[]
+}
+
+model nftInfo {
+  launcher_id   String           @id
+  coin_id       String?
+  info          String?
+  info_version  Int
+  minter_did_id String?
+  collection_id String?
+  col_id        String?
+  components    OfferComponent[]
+}
+
+model OfferComponent {
+  id            String  @id @default(cuid())
+  requested     Boolean
+  offer_id      Bytes
+  component_id  String
+  cat_component CatInfo? @relation(fields: [component_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  nft_component nftInfo? @relation(fields: [component_id], references: [launcher_id], onDelete: Cascade, onUpdate: Cascade)
+  offer         Offer   @relation(fields: [offer_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  @@index ([requested, component_id], name: "requested_component_id")
+  @@index ([component_id], name: "component_id")
+  @@index ([offer_id], name: "offer_id")
+}
+

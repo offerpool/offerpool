@@ -1,13 +1,14 @@
 import { useState } from "react";
 import axios from "axios";
 import { CatInfo } from "./CatInfo";
+import type { ResultType } from "../../../backend/src/routes/v1/offers/types.js"
 
 export function useLoadOffers(
   fromCat: CatInfo | undefined,
   toCat: CatInfo | undefined
 ) {
   const [loading, setLoading] = useState(false);
-  const [items, setItems] = useState<any[]>([]);
+  const [items, setItems] = useState<(ResultType & {price?: number})[]>([]);
   const [hasNextPage, setHasNextPage] = useState(!fromCat || !toCat);
   const [error, setError] = useState();
   const [page, setPage] = useState(1);
@@ -42,12 +43,12 @@ export function useLoadOffers(
         params,
       });
       for (let i = 0; i < result.data.offers.length; i++) {
-        const offer = result.data.offers[i];
+        const offer: ResultType & {price?: number} = result.data.offers[i];
         if (fromCat.id !== "any" && toCat.id !== "any") {
           offer.price =
-            offer.summary.offered[fromCat.id] /
+            (offer.info.offered.find(c => c.component_id === fromCat.id)?.amount ?? 0) /
             fromCat.mojos_per_coin /
-            (offer.summary.requested[toCat.id] / toCat.mojos_per_coin);
+            ((offer.info.requested.find(c => c.component_id === toCat.id)?.amount ?? 0) / toCat.mojos_per_coin);
         } else {
           offer.price = undefined;
         }

@@ -57,7 +57,7 @@ export const TakeOfferInGoby = ({ offer, account }: any) => {
           {({ theme }) => (
             <Modal.Header
               closeButton
-              closeVariant={theme === "dark-mode-content" ? "white" : ""}
+              closeVariant={theme === "dark-mode-content" ? "white" : undefined}
             >
               <Modal.Title>Error Taking Offer</Modal.Title>
             </Modal.Header>
