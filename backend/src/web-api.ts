@@ -61,7 +61,7 @@ const startServer = () => {
 
   // Handles any requests that don't match the ones above
   app.get("*", (_, res) => {
-    res.sendFile(join(__dirname, "../client/build/index.html"));
+    res.sendFile(join(__dirname, "../../client/build/index.html"));
   });
 
   app.listen(port, () => {
