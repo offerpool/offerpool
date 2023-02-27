@@ -5,26 +5,39 @@
   "license": "MIT",
   "type": "module",
   "dependencies": {
+    "@bull-board/express": "^4.12.1",
     "@prisma/client": "^4.10.1",
     "base-x": "^4.0.0",
     "bech32": "^2.0.0",
+    "bull": "^4.10.4",
     "chia-agent": "^10.0.0",
     "compression": "^1.7.4",
+    "connect-ensure-login": "^0.1.1",
     "cors": "^2.8.5",
     "dotenv": "^14.2.0",
     "express": "^4.17.2",
     "express-query-boolean": "^2.0.0",
+    "express-session": "^1.17.3",
     "ipfs-http-client": "^60.0.0",
+    "nostr-tools": "^1.6.0",
     "orbit-db": "^0.29.0",
+    "passport": "^0.6.0",
+    "passport-local": "^1.0.0",
     "pino": "^7.6.5",
     "pino-http": "^6.6.0",
-    "typescript": "^4.9.4"
+    "typescript": "^4.9.4",
+    "websocket-polyfill": "^0.0.3"
   },
   "devDependencies": {
+    "@types/bull": "^4.10.0",
     "@types/compression": "^1.7.2",
+    "@types/connect-ensure-login": "^0.1.7",
     "@types/cors": "^2.8.13",
     "@types/express": "^4.17.16",
+    "@types/express-session": "^1.17.6",
     "@types/node-fetch": "^2.6.2",
+    "@types/passport": "^1.0.12",
+    "@types/passport-local": "^1.0.35",
     "@types/pg": "^8.6.6",
     "nodemon": "^2.0.20",
     "prettier": "^2.5.1",
@@ -33,10 +46,15 @@
   },
   "scripts": {
     "build": "npx tsc",
+    "build-client": "npm --prefix ../client install && npm --prefix ../client run build",
     "start": "node -r dotenv/config ./build/web-api.js",
-    "dev": "nodemon --watch './**/*.ts' --exec 'npm run build && npm run start'",
+    "dev": "nodemon --watch './**/*.ts' --exec 'npm run build && npm run start' --ext ts",
     "start-worker": "node -r dotenv/config ./build/worker.js",
-    "start-worker-sync": "node -r dotenv/config ./build/worker-sync.js",
+    "start-orbitdb": "node -r dotenv/config ./build/worker-orbitdb-pull.js",
+    "start-nostr": "node -r dotenv/config ./build/worker-nostr-pull.js",
     "fmt": "npx prettier -w ."
+  },
+  "prisma": {
+    "seed": "node -r dotenv/config ./prisma/seed/index.js"
   }
 }

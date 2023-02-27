@@ -44,15 +44,18 @@ export const getOffersRoute = async (req: any, res: any) => {
       const offered_cat_info = await getCatInfo(offered);
       where = {
         ...where,
-        AND: [{
-          components: {
-            some: { component_id: offered_cat_info.id, requested: false },
+        AND: [
+          {
+            components: {
+              some: { component_id: offered_cat_info.id, requested: false },
+            },
           },
-        }, {
-          components: {
-            some: { component_id: requested_cat_info.id, requested: true },
+          {
+            components: {
+              some: { component_id: requested_cat_info.id, requested: true },
+            },
           },
-        }],
+        ],
       };
     }
 
@@ -109,12 +112,12 @@ function mapToReturnType(value: OffersQueryReturnType[0]): ResultType {
     active: value.status === 1,
     offer: value.offer,
     info: {
-      offered: value.components.filter((c) => c.requested === false).map((c) =>
-        mapComponent(c, summary, false)
-      ),
-      requested: value.components.filter((c) => c.requested === true).map((c) =>
-        mapComponent(c, summary, true)
-      ),
+      offered: value.components
+        .filter((c) => c.requested === false)
+        .map((c) => mapComponent(c, summary, false)),
+      requested: value.components
+        .filter((c) => c.requested === true)
+        .map((c) => mapComponent(c, summary, true)),
     },
   };
 }
@@ -122,7 +125,7 @@ function mapToReturnType(value: OffersQueryReturnType[0]): ResultType {
 function mapComponent(
   component: OffersQueryReturnType[0]["components"][0],
   summary: TGetOfferSummaryResponse["summary"],
-  requested: boolean,
+  requested: boolean
 ) {
   if (component.nft_component) {
     return {
@@ -132,7 +135,9 @@ function mapComponent(
       amount: requested
         ? summary.requested[component.component_id]
         : summary.offered[component.component_id],
-      nft_info: component.nft_component.info ? JSON.parse(component.nft_component.info) as NFTInfo : undefined,
+      nft_info: component.nft_component.info
+        ? (JSON.parse(component.nft_component.info) as NFTInfo)
+        : undefined,
     } as const;
   } else {
     return {
@@ -141,7 +146,7 @@ function mapComponent(
       cat_code: component.cat_component?.code,
       cat_name: component.cat_component?.name,
       mojos_per_coin: parseInt(
-        component.cat_component?.mojos_per_coin || "1000",
+        component.cat_component?.mojos_per_coin || "1000"
       ),
       amount: requested
         ? summary.requested[component.component_id]

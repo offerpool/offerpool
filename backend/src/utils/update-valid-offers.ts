@@ -48,7 +48,7 @@ export const updateValidOffers = async () => {
   logger.info(
     `Updating statuses for ${offers.length} offers took ${
       (new Date().getTime() - start.getTime()) / 1000
-    } seconds.`,
+    } seconds.`
   );
   updating = false;
   if (requestToUpdate) {
@@ -59,7 +59,7 @@ export const updateValidOffers = async () => {
 
 const updateOffer = async (offer: string, id: Buffer) => {
   const offerStatus = await getOfferValidity(offer);
-  if('error' in offerStatus) {
+  if ("error" in offerStatus) {
     return;
   }
   if (!offerStatus) {

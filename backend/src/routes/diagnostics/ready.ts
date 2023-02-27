@@ -1,5 +1,5 @@
-import { PrismaClient } from '@prisma/client'
-const prisma = new PrismaClient()
+import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
 import { getOfferSummary } from "../../utils/get-offer-summary.js";
 import { logger } from "../../utils/logger.js";
 
@@ -16,9 +16,9 @@ export const readyRoute = async (req: any, res: any) => {
     return;
   }
   try {
-    const prismaResult = await prisma.$queryRaw`SELECT 1;` as {1: string}[];
+    const prismaResult = (await prisma.$queryRaw`SELECT 1;`) as { 1: string }[];
     const offerSummary = await getOfferSummary(exampleOffer);
-    if (prismaResult.length == 1 && !('error' in offerSummary)) {
+    if (prismaResult.length == 1 && !("error" in offerSummary)) {
       res.json({ ready: true });
       counter = 1;
       return;

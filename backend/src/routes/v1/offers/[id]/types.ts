@@ -10,7 +10,6 @@ export interface ResultType {
   };
 }
 
-
 export interface ReturnComponentInfo {
   component_type: "nft" | "cat";
   component_id: string;

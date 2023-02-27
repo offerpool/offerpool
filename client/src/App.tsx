@@ -17,6 +17,7 @@ import { DarkModeSwitch } from "./components/DarkModeSwitch";
 import { GobyContext } from "./contexts/GobyContext";
 import { ConnectGobyAccount } from "./components/ConnectGobyAccount";
 import OfferView from "./OfferView";
+import AdminLogin from "./AdminLogin";
 
 fontawesome.library.add(
   faSpinner as any,
@@ -86,6 +87,7 @@ function App() {
         <Routes>
           <Route path="/" element={<OfferList />} />
           <Route path="/offers/:id" element={<OfferView />} />
+          <Route path="/admin/login" element={<AdminLogin />} />
         </Routes>
       </BrowserRouter>
 
@@ -129,8 +131,6 @@ function App() {
           <Trans>github</Trans>
         </a>
         <div style={{ fontSize: "13px" }}>
-          
-          Sponsored by <a href="https://polyscriber.com">Polyscriber</a>
           <br />
           Send Coffee{" "}
           <span

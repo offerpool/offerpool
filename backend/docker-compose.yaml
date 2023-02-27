@@ -1,22 +1,10 @@
 version: "3"
 services:
-  ipfs:
-    image: "ipfs/go-ipfs"
+  redis:
+    image: "redis:alpine"
     volumes:
-      - ipfs_staging:/export
-      - ipfs_data:/data/ipfs
+      - redis-data:/data
     ports:
-      - "4001:4001"
-      - "4001:4001/udp"
-      - "5001:5001"
-    command:
-      [
-        "daemon",
-        "--migrate=true",
-        "--agent-version-suffix=docker",
-        "--enable-pubsub-experiment",
-      ]
+      - "6379:6379"
 volumes:
-  database-data:
-  ipfs_staging:
-  ipfs_data:
+  redis-data:

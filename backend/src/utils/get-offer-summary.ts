@@ -51,8 +51,8 @@ export const getNFTMetadata = async (nft_info: NFTInfo) => {
     try {
       const response = await fetch(nft_info.metadata_uris[i]);
       const responseString = await response.text();
-      const hash = "0x" +
-        crypto.createHash("sha256").update(responseString).digest("hex");
+      const hash =
+        "0x" + crypto.createHash("sha256").update(responseString).digest("hex");
       if (response.status < 300) {
         if (!nft_info.metadata_hash || hash == nft_info.metadata_hash) {
           return {
@@ -67,7 +67,7 @@ export const getNFTMetadata = async (nft_info: NFTInfo) => {
           actual_hash: hash,
           response: responseString,
         },
-        "error getting nft metadata",
+        "error getting nft metadata"
       );
     } catch (e) {
       logger.info({ e }, "thrown error getting nft metadata");

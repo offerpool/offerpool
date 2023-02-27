@@ -10,11 +10,16 @@ import { saveNFTInfos } from "./save-nft-infos.js";
 
 import { PrismaClient } from "@prisma/client";
 import { TGetOfferSummaryResponse } from "chia-agent/api/rpc/index.js";
+import { doesOfferExistInPG } from "./does-offer-exist-in-pg.js";
 
 const prisma = new PrismaClient();
 
-/** Adds an offer to the postgres table, returns false if the offer could not be added */
+/** Adds an offer to the local table, returns false if the offer could not be added */
 export const addOfferEntryToDB = async (offer: string) => {
+  const exists = (await doesOfferExistInPG([offer]))[0];
+  if (exists) {
+    return true;
+  }
   try {
     const offerSummary = await getOfferSummary(offer);
     // If the chia client can't parse the offer, or it's an xch for xch offer (CAT1 to CAT1/XCH), ignore it
@@ -22,8 +27,8 @@ export const addOfferEntryToDB = async (offer: string) => {
       return true;
     }
     if (
-      (offerSummary.summary.requested["xch"] &&
-        offerSummary.summary.offered["xch"])
+      offerSummary.summary.requested["xch"] &&
+      offerSummary.summary.offered["xch"]
     ) {
       return true;
     }
@@ -38,13 +43,13 @@ export const addOfferEntryToDB = async (offer: string) => {
 
     // If the offer has any nft's, make sure entries for those NFTs exist in the nft_info table
     const nfts = [];
-    const infos = offerSummary && offerSummary.summary &&
-      offerSummary.summary.infos;
+    const infos =
+      offerSummary && offerSummary.summary && offerSummary.summary.infos;
     if (infos) {
       for (let nftCoinId in infos) {
         if (infos[nftCoinId] && infos[nftCoinId].launcher_id) {
           const nftCoinInfo = await getNftCoinInfo(
-            infos[nftCoinId].launcher_id,
+            infos[nftCoinId].launcher_id
           );
           nfts.push(getNftDTO(nftCoinId, nftCoinInfo));
         }
@@ -72,10 +77,10 @@ export const addOfferEntryToDB = async (offer: string) => {
       status,
       offered_cats,
       requested_cats,
-      offerSummary,
+      offerSummary
     );
 
-    logger.info({ offer }, "added offer successfully");
+    logger.info("added offer");
   } catch (err) {
     logger.error({ offer, err }, "error adding offer");
     return false;
@@ -88,7 +93,7 @@ async function commitToDatabase(
   status: number,
   offered_component_ids: string[],
   requested_component_ids: string[],
-  offerSummary: TGetOfferSummaryResponse,
+  offerSummary: TGetOfferSummaryResponse
 ) {
   const result = await prisma.offer.create({
     data: {

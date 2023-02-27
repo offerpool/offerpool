@@ -4,6 +4,7 @@ import { doesOfferExistInPG } from "../../../utils/does-offer-exist-in-pg.js";
 import { getOfferSummary } from "../../../utils/get-offer-summary.js";
 import { logger } from "../../../utils/logger.js";
 import { createHash } from "crypto";
+import { publishOfferToNostr } from "../../../utils/publish-offer-to-nostr.js";
 
 export const postOffersRoute = (db: any) => async (req: any, res: any) => {
   try {
@@ -27,7 +28,7 @@ export const postOffersRoute = (db: any) => async (req: any, res: any) => {
       return;
     }
     const offerSummary = await getOfferSummary(offer);
-    if (!offerSummary || 'error' in offerSummary) {
+    if (!offerSummary || "error" in offerSummary) {
       res.status(400).json({
         success: false,
         error_message: "invalid offer",
@@ -36,8 +37,9 @@ export const postOffersRoute = (db: any) => async (req: any, res: any) => {
     }
     await db?.add({ offer_blob: offer });
 
-    // Add the offer to the postgres database right away instead of waiting for ipfs callbacks
+    // Add the offer to the local database right away instead of waiting for ipfs callbacks
     await addOfferEntryToDB(offer);
+    publishOfferToNostr(offer);
 
     res.json({
       success: true,

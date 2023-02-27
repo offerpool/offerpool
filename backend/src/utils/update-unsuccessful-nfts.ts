@@ -16,7 +16,10 @@ export const updateUnsuccessfulNfts = async () => {
   updating = true;
   const start = new Date();
   logger.info("starting nft update");
-  const nftIds = await prisma.nftInfo.findMany({where: {info_version: 0}, select: {launcher_id: true}});
+  const nftIds = await prisma.nftInfo.findMany({
+    where: { info_version: 0 },
+    select: { launcher_id: true },
+  });
   logger.info(`NFT fixup found ${nftIds.length} NFTs`);
   // Do 10 nfts at once
   const batch_size = 10;

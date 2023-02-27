@@ -15,19 +15,20 @@ export const doesOfferExistInPG = async (offers: string[]) => {
 
   const results = await prisma.offer.findMany({
     where: {
-      id: {in: offerHashes}
-    }, select: {
-      id: true
-    }
+      id: { in: offerHashes },
+    },
+    select: {
+      id: true,
+    },
   });
 
-  const offerHashesBase64 = offerHashes.map(h => h.toString('base64'));
+  const offerHashesBase64 = offerHashes.map((h) => h.toString("base64"));
 
   // turn the row hashes into a map
   const existingHashes: Record<string, boolean> = {};
-  
+
   for (let i = 0; i < results.length; i++) {
-    existingHashes[results[i].id.toString('base64')] = true;
+    existingHashes[results[i].id.toString("base64")] = true;
   }
 
   const returnArray = [];

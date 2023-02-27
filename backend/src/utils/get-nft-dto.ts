@@ -1,7 +1,10 @@
 import { getNftCoinInfo } from "./get-offer-summary.js";
 
-export const getNftDTO = (launcherId: string, nftCoinInfo: Awaited<ReturnType<typeof getNftCoinInfo>>) => {
-  if(!nftCoinInfo.success) {
+export const getNftDTO = (
+  launcherId: string,
+  nftCoinInfo: Awaited<ReturnType<typeof getNftCoinInfo>>
+) => {
+  if (!nftCoinInfo.success) {
     return {
       launcher_id: launcherId,
       coin_id: null,
@@ -9,7 +12,7 @@ export const getNftDTO = (launcherId: string, nftCoinInfo: Awaited<ReturnType<ty
       success: false,
       minter_did_id: null,
       collection_id: null,
-    }
+    };
   }
   return {
     launcher_id: launcherId,

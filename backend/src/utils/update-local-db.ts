@@ -43,7 +43,7 @@ export const updateLocalDB = async (db: any, starting: any) => {
   }
   logger.info(
     {
-      source: "update-postgres-table",
+      source: "update-local-table",
       time: (new Date().getTime() - start) / 1000,
       offers_added: offersAdded,
     },

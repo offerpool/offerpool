@@ -1,3 +1,4 @@
+/** Process that pulls offers from orbit db */
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -17,9 +18,9 @@ let db = undefined;
 const start = async () => {
   db = await getOfferDB();
   attachDbReplicateEvents(db);
-  logger.info("Updating the postgres offer database from the orbitdb database");
+  logger.info("Updating the local offer database from the orbitdb database");
   await updateLocalDB(db, true);
-  logger.info("Done updating the postgres offer database");
+  logger.info("Done updating the local offer database");
 };
 
 start();
